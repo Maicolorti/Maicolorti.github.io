@@ -2,6 +2,7 @@
 import Container from '../shared/Container.astro';
 import ProjectCard from './ProjectCard.astro';
 import Icon from '../shared/Icon.astro';
+
 import project1Image from '../../assets/img/home-page-img-03.jpg';
 import project2Image from '../../assets/img/home-page-img-04.jpg';
 import project3Image from '../../assets/img/home-page-img-05.jpg';
@@ -9,60 +10,92 @@ import project4Image from '../../assets/img/home-page-img-06.jpg';
 
 const projects = [
   {
-    title: "The Concrete Residence",
-    category: "Residential",
-    year: "2023",
+    title: 'Modelado',
+    category: 'Bases de Datos 1',
+    year: '2026',
     image: project1Image,
-    alt: "Monochromatic Brutalist concrete building exterior"
+    alt: 'Evidencias de modelado de bases de datos'
   },
   {
-    title: "Linear Pavilion",
-    category: "Cultural",
-    year: "2022",
+    title: 'Normalización',
+    category: 'Bases de Datos 1',
+    year: '2026',
     image: project2Image,
-    alt: "Modern minimal pavilion with vertical wooden slats"
+    alt: 'Evidencias de normalización de bases de datos'
   },
   {
-    title: "Urban Loft III",
-    category: "Interior",
-    year: "2021",
+    title: 'SQL',
+    category: 'Bases de Datos 1',
+    year: '2026',
     image: project3Image,
-    alt: "Ultra modern open-plan urban loft interior"
+    alt: 'Evidencias y ejercicios realizados con SQL'
   },
   {
-    title: "Glass House Extension",
-    category: "Residential",
-    year: "2023",
+    title: 'Proyecto',
+    category: 'Bases de Datos 1',
+    year: '2026',
     image: project4Image,
-    alt: "Contemporary glass and steel house extension"
+    alt: 'Proyecto final de Bases de Datos 1'
   }
 ];
 ---
 
-<section class="py-24 md:py-32">
+<section class="py-20 md:py-28 bg-white dark:bg-slate-950">
   <Container>
-    <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
-      <div class="max-w-xl">
-        <span class="text-primary font-bold uppercase tracking-[0.3em] text-xs mb-4 block">Portfolio</span>
-        <h2 class="text-4xl md:text-5xl font-black tracking-tighter uppercase leading-none">Selected Works</h2>
+
+    <!-- Section Header -->
+    <div
+      class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12 md:mb-16"
+    >
+      <div>
+        <p
+          class="text-primary text-sm font-bold uppercase tracking-[0.2em] mb-3"
+        >
+          E-portafolio
+        </p>
+
+        <h2
+          class="text-4xl md:text-6xl font-black text-slate-900 dark:text-white tracking-tight"
+        >
+          Evidencias
+        </h2>
+
+        <p
+          class="mt-5 text-slate-600 dark:text-slate-400 max-w-2xl text-base md:text-lg leading-relaxed"
+        >
+          Registro de actividades, ejercicios y proyectos desarrollados
+          durante la asignatura Bases de Datos 1.
+        </p>
       </div>
-      <a href="/projects" class="group flex items-center gap-2 text-sm font-bold uppercase tracking-widest border-b-2 border-primary pb-1">
-        All Projects
-        <Icon name="arrow-right" size={16} class="group-hover:translate-x-1 transition-transform" />
+
+      <a
+        href="/projects"
+        class="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-slate-900 dark:text-white hover:text-primary dark:hover:text-primary transition-colors"
+      >
+        Ver todas las evidencias
+
+        <Icon
+          name="arrow-right"
+          size={18}
+        />
       </a>
     </div>
 
+    <!-- Evidence Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-      {projects.map((project, index) => (
-        <ProjectCard
-          title={project.title}
-          category={project.category}
-          year={project.year}
-          image={project.image}
-          alt={project.alt}
-          index={index}
-        />
-      ))}
+      {
+        projects.map((project, index) => (
+          <ProjectCard
+            title={project.title}
+            category={project.category}
+            year={project.year}
+            image={project.image}
+            alt={project.alt}
+            index={index}
+          />
+        ))
+      }
     </div>
+
   </Container>
 </section>

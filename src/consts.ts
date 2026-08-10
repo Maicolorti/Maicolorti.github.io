@@ -1,17 +1,17 @@
 // src/consts.ts
 
 // Site metadata
-export const SITE_TITLE = 'Studio Alpha';
-export const SITE_DESCRIPTION = 'Architecture studio specializing in minimalist design.';
-
+export const SITE_TITLE = 'E-portafolio | Bases de Datos 1';
+export const SITE_DESCRIPTION =
+  'E-portafolio académico de Bases de Datos 1 - Universidad El Bosque';
 // Blog settings
-export const BLOG_TITLE = 'Studio Alpha Blog';
-export const BLOG_DESCRIPTION = 'Insights on minimalism, architecture, and essential design.';
+export const BLOG_TITLE = 'E-portafolio | Bases de Datos 1';
+export const BLOG_DESCRIPTION = 'E-portafolio académico de Bases de Datos 1 - Universidad El Bosque';
 export const POSTS_PER_PAGE = 6;
 export const BLOG_URL = '/blog';
 
 // Author defaults
-export const DEFAULT_AUTHOR = 'Studio Alpha';
+export const DEFAULT_AUTHOR = 'Maicol Orti';
 
 // 🆕 Blog-related constants
 export const BLOG_CATEGORIES = [

@@ -3,30 +3,166 @@ import { Image } from 'astro:assets';
 import heroImage from '../../assets/img/about-page-img-05.jpg';
 ---
 
-<section class="relative w-full h-[70vh] flex items-center overflow-hidden">
-  <div class="absolute inset-0 z-0">
-    <Image
-      src={heroImage}
-      alt="Modern architectural studio space with large windows and clean lines"
-      class="w-full h-full object-cover grayscale brightness-75 hover:grayscale-0 transition-all duration-1000"
-      loading="eager"
-      fetchpriority="high"
-      layout="full-width"
-      format="webp"
-      fit="cover"
-    />
-    <div class="absolute inset-0 bg-gradient-to-t from-background-light dark:from-background-dark via-transparent to-transparent" />
-  </div>
-  
-  <div class="relative z-10 max-w-7xl mx-auto px-6 w-full">
-    <div class="max-w-2xl">
-      <span class="text-primary font-bold tracking-[0.2em] uppercase text-xs mb-4 block">Est. 2008</span>
-      <h1 class="text-5xl md:text-7xl font-black leading-[1.1] mb-6 text-slate-900 dark:text-white">
-        Space is the <span class="text-primary">Soul</span> of Design.
+<section class="bg-white dark:bg-slate-950 py-20 md:py-28">
+  <div class="max-w-7xl mx-auto px-6">
+
+    <!-- Encabezado -->
+    <div class="mb-14 md:mb-20">
+      <span
+        class="text-primary font-bold tracking-[0.25em] uppercase text-xs mb-4 block"
+      >
+        Sobre mí
+      </span>
+
+      <h1
+        class="text-5xl md:text-7xl font-black tracking-tight text-slate-900 dark:text-white"
+      >
+        Presentación
       </h1>
-      <p class="text-lg text-slate-600 dark:text-slate-400 leading-relaxed max-w-lg">
-        We are an interdisciplinary architecture and design firm focused on crafting environments that inspire human connection and enduring beauty.
-      </p>
     </div>
+
+    <!-- Información personal -->
+    <div
+      class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center"
+    >
+
+      <!-- Foto / Avatar -->
+      <div>
+        <div class="relative overflow-hidden rounded-lg">
+          <Image
+            src={heroImage}
+            alt="Imagen de presentación del E-portafolio"
+            class="w-full aspect-[4/5] object-cover"
+            loading="eager"
+            fetchpriority="high"
+            layout="constrained"
+            width={800}
+            height={1000}
+            format="webp"
+            fit="cover"
+            quality={85}
+          />
+
+          <div
+            class="absolute inset-0 border-[16px] border-white/10 pointer-events-none"
+          ></div>
+        </div>
+      </div>
+
+      <!-- Datos -->
+      <div>
+        <span
+          class="text-primary font-bold uppercase tracking-[0.2em] text-xs mb-4 block"
+        >
+          Estudiante
+        </span>
+
+        <h2
+          class="text-4xl md:text-6xl font-black tracking-tight text-slate-900 dark:text-white mb-8"
+        >
+          Maicol Orti
+        </h2>
+
+        <div class="space-y-5 mb-10">
+          <div>
+            <p
+              class="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-500 mb-1"
+            >
+              Programa
+            </p>
+
+            <p
+              class="text-lg text-slate-800 dark:text-slate-200"
+            >
+              Ingeniería de Sistemas
+            </p>
+          </div>
+
+          <div>
+            <p
+              class="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-500 mb-1"
+            >
+              Universidad
+            </p>
+
+            <p
+              class="text-lg text-slate-800 dark:text-slate-200"
+            >
+              Universidad El Bosque
+            </p>
+          </div>
+
+          <div>
+            <p
+              class="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-500 mb-1"
+            >
+              Asignatura
+            </p>
+
+            <p
+              class="text-lg text-slate-800 dark:text-slate-200"
+            >
+              Bases de Datos 1
+            </p>
+          </div>
+        </div>
+
+        <p
+          class="text-lg md:text-xl text-slate-600 dark:text-slate-400 leading-relaxed font-light"
+        >
+          Soy estudiante de Ingeniería de Sistemas y este E-portafolio
+          representa mi proceso de aprendizaje durante la asignatura
+          Bases de Datos 1. Aquí recopilo las actividades, ejercicios,
+          evidencias y proyectos desarrollados a lo largo del semestre.
+        </p>
+      </div>
+
+    </div>
+
+    <!-- Video -->
+    <div class="mt-24 md:mt-32">
+
+      <div class="max-w-3xl mb-10">
+        <span
+          class="text-primary font-bold uppercase tracking-[0.25em] text-xs mb-4 block"
+        >
+          Video
+        </span>
+
+        <h2
+          class="text-4xl md:text-5xl font-black tracking-tight text-slate-900 dark:text-white mb-5"
+        >
+          Video de presentación
+        </h2>
+
+        <p
+          class="text-slate-600 dark:text-slate-400 text-lg leading-relaxed"
+        >
+          Una breve presentación sobre quién soy, mis intereses y la
+          importancia de Bases de Datos 1 en mi formación profesional.
+        </p>
+      </div>
+
+      <!-- Placeholder temporal del video -->
+      <div
+        class="aspect-video w-full max-w-5xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg flex items-center justify-center"
+      >
+        <div class="text-center px-6">
+          <p
+            class="text-slate-900 dark:text-white font-bold text-lg mb-2"
+          >
+            Video de presentación
+          </p>
+
+          <p
+            class="text-slate-500 dark:text-slate-400 text-sm"
+          >
+            El video de 90–120 segundos será agregado aquí.
+          </p>
+        </div>
+      </div>
+
+    </div>
+
   </div>
 </section>

@@ -2,16 +2,21 @@
 import Button from '../shared/Button.astro';
 import Icon from '../shared/Icon.astro';
 import { Image } from 'astro:assets';
+
 import heroImage from '../../assets/img/home-page-img-01.jpg';
 ---
 
-<section class="relative h-screen w-full flex items-center justify-center overflow-hidden pt-20">
-  <!-- Background Image with Overlay -->
+<section
+  class="relative min-h-[calc(100vh-5rem)] w-full flex items-center justify-center overflow-hidden"
+>
+  <!-- Background Image -->
   <div class="absolute inset-0 z-0">
-    <div class="absolute inset-0 bg-black/40 z-10" />
+    <!-- Overlay -->
+    <div class="absolute inset-0 bg-black/50 z-10"></div>
+
     <Image
       src={heroImage}
-      alt="Minimalist concrete skyscraper reaching towards a clear sky"
+      alt=""
       class="w-full h-full object-cover"
       loading="eager"
       fetchpriority="high"
@@ -23,21 +28,57 @@ import heroImage from '../../assets/img/home-page-img-01.jpg';
   </div>
 
   <!-- Content -->
-  <div class="relative z-20 text-center px-6">
-    <h1 class="text-white text-6xl md:text-9xl font-black leading-none tracking-tight mb-6 uppercase">
-      Form &<br />Function
-    </h1>
-    <p class="text-white/90 text-lg md:text-xl font-light max-w-2xl mx-auto mb-10 tracking-wide uppercase">
-      Defining modern spaces through precision and soul
+  <div class="relative z-20 text-center px-6 max-w-6xl mx-auto">
+    <p
+      class="text-white/80 text-sm md:text-base font-semibold uppercase tracking-[0.25em] mb-5"
+    >
+      Universidad El Bosque
     </p>
-    <div class="flex flex-col md:flex-row gap-4 justify-center items-center">
-      <Button href="/projects" variant="primary" size="lg">View Portfolio</Button>
-      <Button href="/about" variant="secondary" size="lg">Our Story</Button>
+
+    <h1
+      class="text-white text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-[0.95] tracking-tight uppercase mb-7"
+    >
+      E-portafolio
+      <br />
+      Bases de Datos 1
+    </h1>
+
+    <p
+      class="text-white/90 text-base md:text-xl font-light max-w-2xl mx-auto mb-10 tracking-wide"
+    >
+      Ingeniería de Sistemas · Evidencias y proceso de aprendizaje
+    </p>
+
+    <div
+      class="flex flex-col sm:flex-row gap-4 justify-center items-center"
+    >
+      <Button
+        href="/projects"
+        variant="primary"
+        size="lg"
+      >
+        Ver evidencias
+      </Button>
+
+      <Button
+        href="/about"
+        variant="secondary"
+        size="lg"
+      >
+        Mi presentación
+      </Button>
     </div>
   </div>
 
   <!-- Scroll Indicator -->
-  <div class="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 animate-bounce">
-    <Icon name="chevron-down" size={32} class="text-white" />
+  <div
+    class="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 animate-bounce"
+    aria-hidden="true"
+  >
+    <Icon
+      name="chevron-down"
+      size={32}
+      class="text-white"
+    />
   </div>
-</section>
+</section>  
