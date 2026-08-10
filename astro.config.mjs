@@ -1,4 +1,4 @@
-// @ts-check
+ // @ts-check
 import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import tailwindcss from '@tailwindcss/vite';
@@ -8,7 +8,7 @@ import basicSsl from '@vitejs/plugin-basic-ssl';
 import cloudflare from '@astrojs/cloudflare';
 
 export default defineConfig({
-  site: 'https://3dinterior.mail-nearmelab.workers.dev/', // Add this line
+  site: 'https://Maicolorti.github.io/', // Add this line
   integrations: [mdx()],
   vite: {
     plugins: [
