@@ -1,15 +1,16 @@
- // @ts-check
+// @ts-check
 import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import tailwindcss from '@tailwindcss/vite';
 import typography from '@tailwindcss/typography';
 import Icons from 'unplugin-icons/vite';
 import basicSsl from '@vitejs/plugin-basic-ssl';
-import cloudflare from '@astrojs/cloudflare';
 
 export default defineConfig({
-  site: 'https://Maicolorti.github.io/', // Add this line
+  site: 'https://maicolorti.github.io/',
+  
   integrations: [mdx()],
+  
   vite: {
     plugins: [
       basicSsl(),
@@ -19,7 +20,4 @@ export default defineConfig({
       }),
     ],
   },
-  adapter: cloudflare({
-    imageService: 'compile',
-  }),
 });
