@@ -31,7 +31,7 @@ import heroImage from '../../assets/img/about-page-img-05.jpg';
         <div class="relative overflow-hidden rounded-lg">
           <Image
             src={heroImage}
-            alt="Imagen de presentación del E-portafolio"
+            alt="Foto de presentación de Maicol Orti"
             class="w-full aspect-[4/5] object-cover"
             loading="eager"
             fetchpriority="high"
@@ -64,6 +64,8 @@ import heroImage from '../../assets/img/about-page-img-05.jpg';
         </h2>
 
         <div class="space-y-5 mb-10">
+
+          <!-- Programa -->
           <div>
             <p
               class="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-500 mb-1"
@@ -71,13 +73,12 @@ import heroImage from '../../assets/img/about-page-img-05.jpg';
               Programa
             </p>
 
-            <p
-              class="text-lg text-slate-800 dark:text-slate-200"
-            >
+            <p class="text-lg text-slate-800 dark:text-slate-200">
               Ingeniería de Sistemas
             </p>
           </div>
 
+          <!-- Universidad -->
           <div>
             <p
               class="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-500 mb-1"
@@ -85,13 +86,12 @@ import heroImage from '../../assets/img/about-page-img-05.jpg';
               Universidad
             </p>
 
-            <p
-              class="text-lg text-slate-800 dark:text-slate-200"
-            >
+            <p class="text-lg text-slate-800 dark:text-slate-200">
               Universidad El Bosque
             </p>
           </div>
 
+          <!-- Asignatura -->
           <div>
             <p
               class="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-500 mb-1"
@@ -99,14 +99,14 @@ import heroImage from '../../assets/img/about-page-img-05.jpg';
               Asignatura
             </p>
 
-            <p
-              class="text-lg text-slate-800 dark:text-slate-200"
-            >
+            <p class="text-lg text-slate-800 dark:text-slate-200">
               Bases de Datos 1
             </p>
           </div>
+
         </div>
 
+        <!-- Descripción -->
         <p
           class="text-lg md:text-xl text-slate-600 dark:text-slate-400 leading-relaxed font-light"
         >
@@ -122,6 +122,7 @@ import heroImage from '../../assets/img/about-page-img-05.jpg';
     <!-- Video -->
     <div class="mt-24 md:mt-32">
 
+      <!-- Encabezado del video -->
       <div class="max-w-3xl mb-10">
         <span
           class="text-primary font-bold uppercase tracking-[0.25em] text-xs mb-4 block"
@@ -143,23 +144,19 @@ import heroImage from '../../assets/img/about-page-img-05.jpg';
         </p>
       </div>
 
-      <!-- Placeholder temporal del video -->
+      <!-- Video de YouTube -->
       <div
-        class="aspect-video w-full max-w-5xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg flex items-center justify-center"
+        class="aspect-video w-full max-w-5xl overflow-hidden rounded-lg border border-slate-200 dark:border-slate-800 shadow-sm"
       >
-        <div class="text-center px-6">
-          <p
-            class="text-slate-900 dark:text-white font-bold text-lg mb-2"
-          >
-            Video de presentación
-          </p>
-
-          <p
-            class="text-slate-500 dark:text-slate-400 text-sm"
-          >
-            El video de 90–120 segundos será agregado aquí.
-          </p>
-        </div>
+        <iframe
+          class="w-full h-full"
+          src="https://www.youtube.com/embed/V8ESyjMMjr0"
+          title="Video de presentación de Maicol Orti"
+          loading="lazy"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
+        ></iframe>
       </div>
 
     </div>
