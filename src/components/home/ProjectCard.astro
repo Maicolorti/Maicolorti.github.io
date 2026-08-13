@@ -10,47 +10,100 @@ export interface Props {
   image: ImageMetadata;
   alt: string;
   index: number;
+  href?: string;
 }
 
-const { title, category, year, image, alt, index } = Astro.props;
+const {
+  title,
+  category,
+  year,
+  image,
+  alt,
+  index,
+  href
+} = Astro.props;
+
 const isEven = index % 2 === 0;
 
-// Check if it's an SVG (SVGs need special handling in v6)
-// @ts-ignore - image.format might not be in types yet
+// Verificar si la imagen es SVG
+// @ts-ignore
 const isSVG = image?.format === 'svg';
 ---
 
-<div class="group cursor-pointer" class:list={[!isEven && 'md:mt-24']}>
-  <div class="relative aspect-[4/3] overflow-hidden rounded bg-slate-100 dark:bg-slate-800">
-    <div class="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors duration-500 z-10" />
-    
-    {isSVG ? (
-      <img 
-        src={image.src}
-        alt={alt}
-        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-        loading="lazy"
-        decoding="async"
-      />
-    ) : (
-      <Image
-        src={image}
-        alt={alt}
-       widths={[240, 540, 720, image.width]}
-  sizes={`(max-width: 360px) 240px, (max-width: 720px) 540px, (max-width: 1600px) 720px, ${image.width}px`}
-  
-      />
-    )}
+<div
+  class:list={[
+    "group relative",
+    href ? "cursor-pointer" : "cursor-default",
+    !isEven && "md:mt-24"
+  ]}
+>
+  <!-- Enlace sobre toda la tarjeta -->
+  {
+    href && (
+      <a
+        href={href}
+        class="absolute inset-0 z-30"
+        aria-label={`Ver evidencia de ${title}`}
+      ></a>
+    )
+  }
+
+  <!-- Imagen -->
+  <div
+    class="relative aspect-[4/3] overflow-hidden rounded bg-slate-100 dark:bg-slate-800"
+  >
+    <div
+      class="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors duration-500 z-10"
+    ></div>
+
+    {
+      isSVG ? (
+        <img
+          src={image.src}
+          alt={alt}
+          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+          loading="lazy"
+          decoding="async"
+        />
+      ) : (
+        <Image
+          src={image}
+          alt={alt}
+          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+          widths={[240, 540, 720, image.width]}
+          sizes={`(max-width: 360px) 240px, (max-width: 720px) 540px, (max-width: 1600px) 720px, ${image.width}px`}
+        />
+      )
+    }
   </div>
+
+  <!-- Información -->
   <div class="mt-6 flex justify-between items-start">
     <div>
-      <h3 class="text-xl font-bold uppercase tracking-tight group-hover:text-primary transition-colors">
+      <h3
+        class:list={[
+          "text-xl font-bold uppercase tracking-tight transition-colors",
+          href && "group-hover:text-primary"
+        ]}
+      >
         {title}
       </h3>
-      <p class="text-slate-500 dark:text-slate-400 text-sm font-medium uppercase tracking-widest mt-1">
+
+      <p
+        class="text-slate-500 dark:text-slate-400 text-sm font-medium uppercase tracking-widest mt-1"
+      >
         {category} / {year}
       </p>
     </div>
-    <Icon name="arrow-right" size={20} class="text-primary opacity-0 group-hover:opacity-100 transition-opacity" />
+
+    {
+      href && (
+        <Icon
+          name="arrow-right"
+          size={20}
+          class="text-primary opacity-0 group-hover:opacity-100 transition-opacity"
+        />
+      )
+    }
   </div>
 </div>

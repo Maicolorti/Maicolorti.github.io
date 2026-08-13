@@ -14,7 +14,8 @@ const projects = [
     location: "Bases de Datos 1",
     year: "2026",
     image: project1Image,
-    alt: "Evidencias de modelado de bases de datos"
+    alt: "Evidencias de modelado de bases de datos",
+    href: "/projects/modelado"
   },
   {
     title: "Normalización",
@@ -22,7 +23,8 @@ const projects = [
     location: "Bases de Datos 1",
     year: "2026",
     image: project2Image,
-    alt: "Evidencias de normalización de bases de datos"
+    alt: "Evidencias de normalización de bases de datos",
+    href: undefined
   },
   {
     title: "SQL",
@@ -30,7 +32,8 @@ const projects = [
     location: "Bases de Datos 1",
     year: "2026",
     image: project3Image,
-    alt: "Ejercicios y evidencias desarrollados con SQL"
+    alt: "Ejercicios y evidencias desarrollados con SQL",
+    href: undefined
   },
   {
     title: "Proyecto",
@@ -38,13 +41,16 @@ const projects = [
     location: "Bases de Datos 1",
     year: "2026",
     image: project4Image,
-    alt: "Proyecto desarrollado durante Bases de Datos 1"
+    alt: "Proyecto desarrollado durante Bases de Datos 1",
+    href: undefined
   }
 ];
 ---
 
 <Container>
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
+  <div
+    class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10"
+  >
     {
       projects.map((project) => (
         <ProjectCard
@@ -54,6 +60,7 @@ const projects = [
           year={project.year}
           image={project.image}
           alt={project.alt}
+          href={project.href}
         />
       ))
     }
