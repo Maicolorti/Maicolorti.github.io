@@ -1,0 +1,352 @@
+---
+import type { CategoryData, EvidenceItem } from '../../data/evidencias';
+
+export interface Props {
+  category: CategoryData;
+  evidence: EvidenceItem;
+}
+
+const { category, evidence } = Astro.props;
+---
+
+<main class="bg-white dark:bg-slate-950">
+  <!-- Encabezado -->
+  <section class="py-16 md:py-24">
+    <div class="max-w-7xl mx-auto px-6">
+      <a
+        href={`/projects/${category.slug}`}
+        class="inline-flex items-center text-primary text-sm font-bold uppercase tracking-wider hover:opacity-80 transition-opacity"
+      >
+        ← Volver a {category.name}
+      </a>
+
+      <div class="mt-8 max-w-4xl">
+        <span
+          class="text-primary font-bold uppercase tracking-[0.25em] text-xs mb-4 block"
+        >
+          Evidencia {evidence.order} · {evidence.type}
+        </span>
+
+        <h1
+          class="text-5xl md:text-7xl font-black tracking-tight text-slate-900 dark:text-white mb-6"
+        >
+          {evidence.title}
+        </h1>
+
+        {
+          evidence.subtitle && (
+            <h2 class="text-2xl md:text-3xl font-bold text-slate-700 dark:text-slate-300 mb-6">
+              {evidence.subtitle}
+            </h2>
+          )
+        }
+
+        {
+          evidence.context && (
+            <p class="text-lg md:text-xl text-slate-600 dark:text-slate-400 leading-relaxed">
+              {evidence.context}
+            </p>
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Ficha de metadatos -->
+  <section class="pb-16">
+    <div class="max-w-7xl mx-auto px-6">
+      <div
+        class="grid grid-cols-1 md:grid-cols-3 gap-8 border-y border-slate-200 dark:border-slate-800 py-10"
+      >
+        <div>
+          <p
+            class="text-xs font-bold uppercase tracking-widest text-slate-500 mb-2"
+          >
+            Asignatura
+          </p>
+          <p class="text-slate-900 dark:text-white font-medium">
+            Bases de Datos 1
+          </p>
+        </div>
+
+        <div>
+          <p
+            class="text-xs font-bold uppercase tracking-widest text-slate-500 mb-2"
+          >
+            Tipo de evidencia
+          </p>
+          <p class="text-slate-900 dark:text-white font-medium">
+            {evidence.type}
+          </p>
+        </div>
+
+        <div>
+          <p
+            class="text-xs font-bold uppercase tracking-widest text-slate-500 mb-2"
+          >
+            Categoría
+          </p>
+          <p class="text-slate-900 dark:text-white font-medium">
+            {category.name}
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Descripción de la actividad (si existe) -->
+  {
+    evidence.activityDescription && (
+      <section class="pb-16">
+        <div class="max-w-7xl mx-auto px-6">
+          <div class="max-w-4xl">
+            <span
+              class="text-primary font-bold uppercase tracking-[0.25em] text-xs mb-4 block"
+            >
+              Actividad
+            </span>
+
+            <h2
+              class="text-3xl md:text-4xl font-black tracking-tight text-slate-900 dark:text-white mb-6"
+            >
+              Descripción de la evidencia
+            </h2>
+
+            <p
+              class="text-lg text-slate-600 dark:text-slate-400 leading-relaxed"
+            >
+              {evidence.activityDescription}
+            </p>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- Solución con imagen principal única -->
+  {
+    evidence.solutionImage && (
+      <section class="pb-24">
+        <div class="max-w-7xl mx-auto px-6">
+          <div
+            class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-8"
+          >
+            <div>
+              <span
+                class="text-primary font-bold uppercase tracking-[0.25em] text-xs mb-3 block"
+              >
+                Evidencia visual
+              </span>
+
+              <h2
+                class="text-3xl md:text-4xl font-black tracking-tight text-slate-900 dark:text-white"
+              >
+                {evidence.subtitle || evidence.title}
+              </h2>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-3">
+              {
+                evidence.pdfUrl && (
+                  <a
+                    href={evidence.pdfUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-flex items-center justify-center border border-primary text-primary hover:bg-primary hover:text-white px-5 py-2.5 rounded text-sm font-bold uppercase tracking-wider transition-colors"
+                  >
+                    {evidence.pdfLabel || "VER / DESCARGAR PDF"}
+                  </a>
+                )
+              }
+              {
+                evidence.complementaryFileUrl && (
+                  <a
+                    href={evidence.complementaryFileUrl}
+                    download
+                    class="inline-flex items-center justify-center border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 hover:border-primary hover:text-primary px-5 py-2.5 rounded text-sm font-bold uppercase tracking-wider transition-colors"
+                  >
+                    {evidence.complementaryFileLabel || "DESCARGAR ARCHIVO"}
+                  </a>
+                )
+              }
+            </div>
+          </div>
+
+          <div
+            class="rounded-lg overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900"
+          >
+            <a
+              href={evidence.solutionImage}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Abrir imagen de ${evidence.title} en tamaño completo`}
+            >
+              <img
+                src={evidence.solutionImage}
+                alt={evidence.solutionAlt || evidence.title}
+                class="w-full h-auto object-contain"
+                loading="lazy"
+              />
+            </a>
+          </div>
+
+          <div
+            class="mt-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
+          >
+            <p class="text-sm text-slate-500 dark:text-slate-400">
+              Haz clic sobre la imagen para visualizarla en tamaño completo.
+            </p>
+
+            {
+              evidence.pdfUrl && (
+                <a
+                  href={evidence.pdfUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-sm font-bold text-primary hover:underline"
+                >
+                  Abrir documento PDF →
+                </a>
+              )
+            }
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- Solución con múltiples secciones (ej. Quiz 1) -->
+  {
+    evidence.sections && evidence.sections.length > 0 && (
+      <div class="space-y-20 pb-24">
+        {
+          (evidence.pdfUrl || evidence.complementaryFileUrl) && (
+            <div class="max-w-7xl mx-auto px-6 flex justify-end gap-3">
+              {
+                evidence.pdfUrl && (
+                  <a
+                    href={evidence.pdfUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-flex items-center justify-center border border-primary text-primary hover:bg-primary hover:text-white px-5 py-2.5 rounded text-sm font-bold uppercase tracking-wider transition-colors"
+                  >
+                    {evidence.pdfLabel || "VER / DESCARGAR PDF"}
+                  </a>
+                )
+              }
+              {
+                evidence.complementaryFileUrl && (
+                  <a
+                    href={evidence.complementaryFileUrl}
+                    download
+                    class="inline-flex items-center justify-center border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 hover:border-primary hover:text-primary px-5 py-2.5 rounded text-sm font-bold uppercase tracking-wider transition-colors"
+                  >
+                    {evidence.complementaryFileLabel || "DESCARGAR ARCHIVO"}
+                  </a>
+                )
+              }
+            </div>
+          )
+        }
+
+        {
+          evidence.sections.map((section) => (
+            <section class="max-w-7xl mx-auto px-6">
+              {
+                section.title && (
+                  <h2
+                    class="text-3xl md:text-4xl font-black text-slate-900 dark:text-white mb-6"
+                  >
+                    {section.title}
+                  </h2>
+                )
+              }
+
+              {
+                section.description && (
+                  <p
+                    class="text-lg text-slate-600 dark:text-slate-400 leading-relaxed max-w-5xl mb-8"
+                  >
+                    {section.description}
+                  </p>
+                )
+              }
+
+              {
+                section.image && (
+                  <div
+                    class="rounded-lg overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900"
+                  >
+                    <a
+                      href={section.image}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={section.title || "Ver solución en tamaño completo"}
+                    >
+                      <img
+                        src={section.image}
+                        alt={section.imageAlt || section.title || "Solución del ejercicio"}
+                        class="w-full h-auto object-contain"
+                        loading="lazy"
+                      />
+                    </a>
+                  </div>
+                )
+              }
+            </section>
+          ))
+        }
+      </div>
+    )
+  }
+
+  <!-- Recursos y archivos de soporte (cuando no hay imagen de solución) -->
+  {
+    !evidence.solutionImage && (!evidence.sections || evidence.sections.length === 0) && (evidence.pdfUrl || evidence.complementaryFileUrl) && (
+      <section class="pb-24">
+        <div class="max-w-7xl mx-auto px-6">
+          <div class="rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 p-8 md:p-10">
+            <span class="text-primary font-bold uppercase tracking-[0.25em] text-xs mb-3 block">
+              Recursos de la actividad
+            </span>
+
+            <h2 class="text-2xl md:text-3xl font-black tracking-tight text-slate-900 dark:text-white mb-4">
+              Documentos y archivos de la evidencia
+            </h2>
+
+            <p class="text-slate-600 dark:text-slate-400 text-base md:text-lg leading-relaxed mb-8 max-w-3xl">
+              Esta actividad cuenta con documentos y archivos desarrollados para su consulta y verificación. Puedes abrir o descargar los recursos correspondientes mediante los siguientes botones:
+            </p>
+
+            <div class="flex flex-wrap items-center gap-4">
+              {
+                evidence.pdfUrl && (
+                  <a
+                    href={evidence.pdfUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-flex items-center justify-center border border-primary text-primary hover:bg-primary hover:text-white px-5 py-2.5 rounded text-sm font-bold uppercase tracking-wider transition-colors"
+                  >
+                    {evidence.pdfLabel || "VER / DESCARGAR PDF"}
+                  </a>
+                )
+              }
+
+              {
+                evidence.complementaryFileUrl && (
+                  <a
+                    href={evidence.complementaryFileUrl}
+                    download
+                    class="inline-flex items-center justify-center border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:border-primary hover:text-primary px-5 py-2.5 rounded text-sm font-bold uppercase tracking-wider transition-colors shadow-xs"
+                  >
+                    {evidence.complementaryFileLabel || "DESCARGAR ARCHIVO (.XLSX)"}
+                  </a>
+                )
+              }
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
+</main>

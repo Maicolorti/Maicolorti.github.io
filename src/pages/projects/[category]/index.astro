@@ -1,0 +1,72 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import Navbar from '../../../components/home/Navbar.astro';
+import Footer from '../../../components/shared/Footer.astro';
+import EvidenceCategoryHeader from '../../../components/evidencias/EvidenceCategoryHeader.astro';
+import EvidenceCard from '../../../components/evidencias/EvidenceCard.astro';
+import { CATEGORIES_LIST, type CategoryData } from '../../../data/evidencias';
+
+export function getStaticPaths() {
+  return CATEGORIES_LIST.map((category) => ({
+    params: { category: category.slug },
+    props: { category },
+  }));
+}
+
+export interface Props {
+  category: CategoryData;
+}
+
+const { category } = Astro.props;
+---
+
+<Layout
+  title={category.title}
+  description={category.description}
+>
+  <Navbar />
+
+  <main class="bg-white dark:bg-slate-950 min-h-[70vh]">
+    <EvidenceCategoryHeader
+      name={category.name}
+      description={category.description}
+    />
+
+    <section class="pb-24">
+      <div class="max-w-7xl mx-auto px-6">
+        {
+          category.evidences && category.evidences.length > 0 ? (
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
+              {category.evidences.map((evidence) => (
+                <EvidenceCard
+                  evidence={evidence}
+                  categorySlug={category.slug}
+                />
+              ))}
+            </div>
+          ) : (
+            <div class="p-10 rounded-lg border border-dashed border-slate-300 dark:border-slate-800 text-center bg-slate-50 dark:bg-slate-900/30">
+              <span class="inline-block text-primary text-xs font-bold uppercase tracking-widest mb-3">
+                En desarrollo
+              </span>
+              <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">
+                Sin evidencias registradas todavía
+              </h2>
+              <p class="text-slate-600 dark:text-slate-400 max-w-lg mx-auto text-sm md:text-base mb-6">
+                Las actividades, evaluaciones y ejercicios correspondientes a esta categoría se publicarán progresivamente a lo largo del semestre.
+              </p>
+              <a
+                href="/projects"
+                class="inline-flex items-center text-sm font-bold uppercase tracking-wider text-primary hover:underline"
+              >
+                ← Volver a todas las categorías
+              </a>
+            </div>
+          )
+        }
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>

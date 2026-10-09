@@ -1,0 +1,39 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import Navbar from '../../../components/home/Navbar.astro';
+import Footer from '../../../components/shared/Footer.astro';
+import EvidenceDetail from '../../../components/evidencias/EvidenceDetail.astro';
+import { CATEGORIES_LIST, type CategoryData, type EvidenceItem } from '../../../data/evidencias';
+
+export function getStaticPaths() {
+  return CATEGORIES_LIST.flatMap((category) =>
+    category.evidences
+      .filter((evidence) => evidence.status === 'available')
+      .map((evidence) => ({
+        params: { category: category.slug, slug: evidence.slug },
+        props: { category, evidence },
+      }))
+  );
+}
+
+export interface Props {
+  category: CategoryData;
+  evidence: EvidenceItem;
+}
+
+const { category, evidence } = Astro.props;
+---
+
+<Layout
+  title={`${evidence.title} | Bases de Datos 1`}
+  description={evidence.shortDescription}
+>
+  <Navbar />
+
+  <EvidenceDetail
+    category={category}
+    evidence={evidence}
+  />
+
+  <Footer />
+</Layout>

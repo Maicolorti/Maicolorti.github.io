@@ -1,0 +1,72 @@
+---
+import type { EvidenceItem } from '../../data/evidencias';
+
+export interface Props {
+  evidence: EvidenceItem;
+  categorySlug: string;
+}
+
+const { evidence, categorySlug } = Astro.props;
+const isAvailable = evidence.status === 'available';
+const href = `/projects/${categorySlug}/${evidence.slug}`;
+---
+
+<div
+  class="flex flex-col justify-between p-7 md:p-8 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-200 shadow-xs"
+>
+  <div>
+    <!-- Tipo y número de evidencia -->
+    <div class="flex items-center gap-2 mb-3">
+      <span
+        class="text-primary text-xs font-bold uppercase tracking-widest"
+      >
+        Evidencia {evidence.order} · {evidence.type}
+      </span>
+    </div>
+
+    <!-- Título -->
+    <h2
+      class="text-2xl md:text-3xl font-black text-slate-900 dark:text-white tracking-tight mb-2"
+    >
+      {evidence.title}
+    </h2>
+
+    <!-- Subtítulo opcional -->
+    {
+      evidence.subtitle && (
+        <p class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3">
+          {evidence.subtitle}
+        </p>
+      )
+    }
+
+    <!-- Descripción corta -->
+    <p
+      class="text-slate-600 dark:text-slate-400 text-sm md:text-base leading-relaxed mb-6"
+    >
+      {evidence.shortDescription}
+    </p>
+  </div>
+
+  <!-- Botón de acción / Estado -->
+  <div class="pt-4 border-t border-slate-100 dark:border-slate-800/80">
+    {
+      isAvailable ? (
+        <a
+          href={href}
+          class="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-primary hover:text-primary/80 transition-colors group"
+          aria-label={`Ver evidencia ${evidence.title}`}
+        >
+          <span>VER EVIDENCIA</span>
+          <span class="inline-block transition-transform duration-200 group-hover:translate-x-1">→</span>
+        </a>
+      ) : (
+        <span
+          class="inline-block text-xs font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 py-1"
+        >
+          PRÓXIMAMENTE
+        </span>
+      )
+    }
+  </div>
+</div>

@@ -1,0 +1,39 @@
+---
+export interface Props {
+  name: string;
+  description: string;
+}
+
+const { name, description } = Astro.props;
+---
+
+<section class="py-16 md:py-24">
+  <div class="max-w-7xl mx-auto px-6">
+    <a
+      href="/projects"
+      class="inline-flex items-center text-primary text-sm font-bold uppercase tracking-wider hover:opacity-80 transition-opacity"
+    >
+      ← Volver a Evidencias
+    </a>
+
+    <div class="mt-8 max-w-4xl">
+      <span
+        class="text-primary font-bold uppercase tracking-[0.25em] text-xs mb-4 block"
+      >
+        Categoría
+      </span>
+
+      <h1
+        class="text-5xl md:text-7xl font-black tracking-tight text-slate-900 dark:text-white mb-6"
+      >
+        {name}
+      </h1>
+
+      <p
+        class="text-lg md:text-xl text-slate-600 dark:text-slate-400 leading-relaxed"
+      >
+        {description}
+      </p>
+    </div>
+  </div>
+</section>
