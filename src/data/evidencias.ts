@@ -28,6 +28,11 @@ export interface EvidenceItem {
   assumptionsIntro?: string;
   assumptions?: EvidenceDetailBlock[];
   activityDescription?: string;
+  objective?: string;
+  sqlCode?: string;
+  sqlExplanation?: string;
+  sqlFileUrl?: string;
+  sqlFileLabel?: string;
   solutionImage?: string;
   solutionAlt?: string;
   sections?: EvidenceSection[];
@@ -527,8 +532,438 @@ export const CATEGORIES_DATA: Record<string, CategoryData> = {
     name: 'SQL',
     title: 'SQL | Bases de Datos 1',
     description:
-      'Registro de talleres, consultas y evidencias desarrolladas en SQL para definición (DDL) y manipulación (DML) de bases de datos.',
-    evidences: [],
+      'Registro de talleres, consultas y evidencias desarrolladas en Oracle SQL utilizando Oracle SQL Developer sobre el esquema HR de Oracle Database.',
+    evidences: [
+      {
+        slug: 'consulta-1-departamentos-80-90',
+        order: 1,
+        type: 'EJERCICIO PRÁCTICO',
+        title: 'Empleados de los departamentos 80 y 90',
+        subtitle: 'Consulta multitabla por departamento y continente en el esquema HR',
+        shortDescription:
+          'Consulta de empleados pertenecientes a los departamentos 80 y 90, mostrando nombre, apellido, salario y continente.',
+        context:
+          'Ejercicio desarrollado en Oracle SQL utilizando Oracle SQL Developer sobre el esquema HR de Oracle Database.',
+        statementIntro:
+          'A partir del esquema HR de Oracle Database, se solicita formular una consulta en dialecto Oracle SQL que resuelva el siguiente requerimiento:',
+        statementBlocks: [
+          {
+            title: 'Requerimiento de la consulta',
+            paragraphs: [
+              'Consultar los empleados pertenecientes a los departamentos 80 y 90, mostrando su nombre, apellido, salario y el continente al que pertenece su ubicación.',
+            ],
+          },
+        ],
+        objective:
+          'Recuperar la información de los empleados adscritos a los departamentos 80 y 90 dentro del esquema HR de Oracle Database, proyectando nombre, apellido, salario y continente mediante la articulación de las tablas del modelo en dialecto Oracle SQL.',
+        sqlCode: `-- Ejercicio 1: Empleados de los departamentos 80 y 90
+SELECT E.FIRST_NAME AS NOMBRE, E.LAST_NAME AS APELLIDO,
+       E.SALARY AS SALARIO, R.REGION_NAME AS CONTINENTE
+FROM HR.EMPLOYEES E
+JOIN HR.DEPARTMENTS D ON E.DEPARTMENT_ID = D.DEPARTMENT_ID
+JOIN HR.LOCATIONS L ON D.LOCATION_ID = L.LOCATION_ID
+JOIN HR.COUNTRIES C ON L.COUNTRY_ID = C.COUNTRY_ID
+JOIN HR.REGIONS R ON C.REGION_ID = R.REGION_ID
+WHERE D.DEPARTMENT_ID IN (80, 90);`,
+        sqlExplanation:
+          'Propuesta de consulta generada a partir del enunciado y de la estructura del esquema HR. La sentencia encadena mediante cláusulas JOIN las tablas HR.EMPLOYEES, HR.DEPARTMENTS, HR.LOCATIONS, HR.COUNTRIES y HR.REGIONS para navegar desde el departamento del empleado hasta su región o continente (REGION_NAME), filtrando en la cláusula WHERE los departamentos con identificador 80 y 90 mediante el predicado IN (80, 90).',
+        sqlFileUrl: '/evidencias/sql/ejercicio-01/ejercicio-01.sql',
+        sqlFileLabel: 'DESCARGAR SCRIPT (.SQL)',
+        status: 'available',
+      },
+      {
+        slug: 'consulta-2-empleado-y-manager',
+        order: 2,
+        type: 'EJERCICIO PRÁCTICO',
+        title: 'Concatenación de empleado y manager',
+        subtitle: 'Relación jerárquica de empleados y concatenación de nombres en el esquema HR',
+        shortDescription:
+          'Concatenación del nombre y apellido del empleado y de su manager sobre el esquema HR.',
+        context:
+          'Ejercicio desarrollado en Oracle SQL utilizando Oracle SQL Developer sobre el esquema HR de Oracle Database.',
+        statementIntro:
+          'Sobre la estructura jerárquica de empleados en el esquema HR de Oracle Database, se plantea el siguiente requerimiento:',
+        statementBlocks: [
+          {
+            title: 'Requerimiento de la consulta',
+            paragraphs: [
+              'Realizar la concatenación del nombre y apellido del empleado junto con la concatenación del nombre y apellido de su respectivo manager.',
+            ],
+          },
+        ],
+        objective:
+          'Vincular cada empleado con su jefe directo (manager) en el esquema HR de Oracle Database y presentar en formato concatenado el nombre completo tanto del empleado como de su manager empleando sintaxis de Oracle SQL.',
+        sqlCode: `-- Ejercicio 2: Nombre completo del empleado y de su manager
+SELECT E.FIRST_NAME || ' ' || E.LAST_NAME AS EMPLEADO,
+       M.FIRST_NAME || ' ' || M.LAST_NAME AS MANAGER
+FROM HR.EMPLOYEES E
+LEFT JOIN HR.EMPLOYEES M ON E.MANAGER_ID = M.EMPLOYEE_ID;`,
+        sqlExplanation:
+          'Propuesta de consulta formulada sobre el esquema HR utilizando una autorrelación (LEFT JOIN de HR.EMPLOYEES consigo misma a través de E.MANAGER_ID = M.EMPLOYEE_ID) para incluir también a los empleados sin jefe asignado. Emplea el operador nativo de concatenación de Oracle SQL (||) para unir FIRST_NAME y LAST_NAME tanto del empleado (E) como de su manager (M).',
+        sqlFileUrl: '/evidencias/sql/ejercicio-02/ejercicio-02.sql',
+        sqlFileLabel: 'DESCARGAR SCRIPT (.SQL)',
+        status: 'available',
+      },
+      {
+        slug: 'consulta-3-empleados-por-pais',
+        order: 3,
+        type: 'EJERCICIO PRÁCTICO',
+        title: 'Cantidad de empleados por país',
+        subtitle: 'Agrupación y filtrado de países con más de 10 empleados en el esquema HR',
+        shortDescription:
+          'Cantidad de empleados por país, mostrando únicamente países con más de 10 empleados.',
+        context:
+          'Ejercicio desarrollado en Oracle SQL utilizando Oracle SQL Developer sobre el esquema HR de Oracle Database.',
+        statementIntro:
+          'A partir de las entidades geográficas y de personal del esquema HR de Oracle Database, se solicita:',
+        statementBlocks: [
+          {
+            title: 'Requerimiento de la consulta',
+            paragraphs: [
+              'Obtener la cantidad de empleados por país, mostrando únicamente aquellos países que cuenten con más de 10 empleados.',
+            ],
+          },
+        ],
+        objective:
+          'Agrupar el personal registrado en el esquema HR por país de ubicación y filtrar los grupos resultantes para exhibir exclusivamente aquellos países que superen los 10 empleados mediante funciones de agregación en Oracle SQL.',
+        sqlCode: `-- Ejercicio 3: Cantidad de empleados por país (más de 10)
+SELECT C.COUNTRY_NAME AS PAIS,
+       COUNT(E.EMPLOYEE_ID) AS CANTIDAD_EMPLEADOS
+FROM HR.EMPLOYEES E
+JOIN HR.DEPARTMENTS D ON E.DEPARTMENT_ID = D.DEPARTMENT_ID
+JOIN HR.LOCATIONS L ON D.LOCATION_ID = L.LOCATION_ID
+JOIN HR.COUNTRIES C ON L.COUNTRY_ID = C.COUNTRY_ID
+GROUP BY C.COUNTRY_NAME
+HAVING COUNT(E.EMPLOYEE_ID) > 10
+ORDER BY CANTIDAD_EMPLEADOS DESC;`,
+        sqlExplanation:
+          'Propuesta de consulta generada a partir del enunciado y del esquema HR. Une las tablas HR.EMPLOYEES, HR.DEPARTMENTS, HR.LOCATIONS y HR.COUNTRIES, agrupa los registros por nombre del país (GROUP BY C.COUNTRY_NAME) para contar los empleados con COUNT(E.EMPLOYEE_ID) y aplica la cláusula HAVING COUNT(E.EMPLOYEE_ID) > 10 para restringir el resultado a los países con más de diez empleados, ordenando de mayor a menor.',
+        sqlFileUrl: '/evidencias/sql/ejercicio-03/ejercicio-03.sql',
+        sqlFileLabel: 'DESCARGAR SCRIPT (.SQL)',
+        status: 'available',
+      },
+      {
+        slug: 'consulta-4-top-salarios-departamento',
+        order: 4,
+        type: 'EJERCICIO PRÁCTICO',
+        title: 'Suma de salarios por departamento (Top 5 con empates)',
+        subtitle: 'Agrupación salarial, orden descendente y primeros cinco departamentos en Oracle SQL',
+        shortDescription:
+          'Suma de salarios por departamento en orden descendente, primeros cinco departamentos e incluyendo empates.',
+        context:
+          'Ejercicio desarrollado en Oracle SQL utilizando Oracle SQL Developer sobre el esquema HR de Oracle Database.',
+        statementIntro:
+          'Sobre la información salarial por departamento en el esquema HR de Oracle Database, se solicita resolver:',
+        statementBlocks: [
+          {
+            title: 'Requerimiento de la consulta',
+            paragraphs: [
+              'Calcular la suma de salarios por departamento en orden descendente, mostrando únicamente los primeros cinco departamentos e incluyendo empates.',
+            ],
+          },
+        ],
+        objective:
+          'Totalizar los salarios por departamento en el esquema HR, ordenar los resultados de forma descendente y restringir la salida a los primeros cinco departamentos conservando posibles empates mediante sintaxis nativa de Oracle SQL.',
+        sqlCode: `-- Ejercicio 4: Cinco departamentos con mayor suma salarial, incluyendo empates
+-- FETCH FIRST ... WITH TIES requiere Oracle 12c o posterior.
+SELECT D.DEPARTMENT_NAME AS DEPARTAMENTO,
+       SUM(E.SALARY) AS TOTAL_SALARIOS
+FROM HR.DEPARTMENTS D
+JOIN HR.EMPLOYEES E ON D.DEPARTMENT_ID = E.DEPARTMENT_ID
+GROUP BY D.DEPARTMENT_ID, D.DEPARTMENT_NAME
+ORDER BY TOTAL_SALARIOS DESC
+FETCH FIRST 5 ROWS WITH TIES;`,
+        sqlExplanation:
+          'Propuesta de consulta planteada para el esquema HR en Oracle SQL (Oracle 12c o posterior). Agrupa los empleados por departamento (D.DEPARTMENT_ID, D.DEPARTMENT_NAME) calculando la suma salarial con SUM(E.SALARY), ordena de forma descendente por TOTAL_SALARIOS y utiliza la cláusula estándar de Oracle FETCH FIRST 5 ROWS WITH TIES para obtener los primeros cinco departamentos incluyendo posibles empates en la quinta posición.',
+        sqlFileUrl: '/evidencias/sql/ejercicio-04/ejercicio-04.sql',
+        sqlFileLabel: 'DESCARGAR SCRIPT (.SQL)',
+        status: 'available',
+      },
+      {
+        slug: 'consulta-5-cargos-anteriores',
+        order: 5,
+        type: 'EJERCICIO PRÁCTICO',
+        title: 'Empleados con más de dos cargos anteriores',
+        subtitle: 'Análisis de historial laboral en el esquema HR de Oracle Database',
+        shortDescription:
+          'Empleados con más de dos cargos anteriores al actual, mostrando nombre y cantidad de cargos anteriores.',
+        context:
+          'Ejercicio desarrollado en Oracle SQL utilizando Oracle SQL Developer sobre el esquema HR de Oracle Database.',
+        statementIntro:
+          'A partir del registro histórico de cargos del esquema HR de Oracle Database, se solicita formular una consulta que cumpla con lo siguiente:',
+        statementBlocks: [
+          {
+            title: 'Requerimiento de la consulta',
+            paragraphs: [
+              'Consultar los empleados que han tenido más de dos cargos anteriores al actual, mostrando su nombre y la cantidad de cargos anteriores.',
+            ],
+          },
+        ],
+        objective:
+          'Contabilizar los registros históricos de cargos por empleado en el esquema HR y filtrar aquellos trabajadores que acumulan más de dos cargos previos al actual utilizando Oracle SQL.',
+        sqlCode: `-- Ejercicio 5: Empleados con más de dos cargos anteriores
+SELECT E.FIRST_NAME || ' ' || E.LAST_NAME AS EMPLEADO,
+       COUNT(JH.JOB_ID) AS CARGOS_ANTERIORES
+FROM HR.EMPLOYEES E
+JOIN HR.JOB_HISTORY JH ON E.EMPLOYEE_ID = JH.EMPLOYEE_ID
+GROUP BY E.EMPLOYEE_ID, E.FIRST_NAME, E.LAST_NAME
+HAVING COUNT(JH.JOB_ID) > 2
+ORDER BY CARGOS_ANTERIORES DESC;`,
+        sqlExplanation:
+          'Propuesta de consulta construida a partir del enunciado y la relación entre HR.EMPLOYEES y HR.JOB_HISTORY. Agrupa por identificador y nombre del empleado para contabilizar mediante COUNT(JH.JOB_ID) los cargos registrados en el historial laboral, filtrando con HAVING COUNT(JH.JOB_ID) > 2 aquellos empleados que superan dos cargos anteriores.',
+        sqlFileUrl: '/evidencias/sql/ejercicio-05/ejercicio-05.sql',
+        sqlFileLabel: 'DESCARGAR SCRIPT (.SQL)',
+        status: 'available',
+      },
+      {
+        slug: 'consulta-6-empleados-reino-unido',
+        order: 6,
+        type: 'EJERCICIO PRÁCTICO',
+        title: 'Empleados del Reino Unido con patrón en el nombre',
+        subtitle: 'Filtrado geográfico y coincidencia de caracteres en la tercera posición en Oracle SQL',
+        shortDescription:
+          'Empleados del Reino Unido cuyo nombre tenga una letra "a" minúscula en la tercera posición.',
+        context:
+          'Ejercicio desarrollado en Oracle SQL utilizando Oracle SQL Developer sobre el esquema HR de Oracle Database.',
+        statementIntro:
+          'Sobre las tablas de empleados y localizaciones geográficas del esquema HR de Oracle Database, se plantea el siguiente ejercicio:',
+        statementBlocks: [
+          {
+            title: 'Requerimiento de la consulta',
+            paragraphs: [
+              'Consultar los empleados del Reino Unido cuyo nombre tenga una letra "a" minúscula en la tercera posición.',
+            ],
+          },
+        ],
+        objective:
+          'Combinar el filtrado por país (Reino Unido) con la evaluación posicional de caracteres en el nombre del empleado (letra "a" minúscula en la tercera posición) dentro del esquema HR en Oracle SQL.',
+        sqlCode: `-- Ejercicio 6: Reino Unido y letra 'a' minúscula en la tercera posición
+SELECT E.FIRST_NAME AS NOMBRE, E.LAST_NAME AS APELLIDO
+FROM HR.EMPLOYEES E
+JOIN HR.DEPARTMENTS D ON E.DEPARTMENT_ID = D.DEPARTMENT_ID
+JOIN HR.LOCATIONS L ON D.LOCATION_ID = L.LOCATION_ID
+JOIN HR.COUNTRIES C ON L.COUNTRY_ID = C.COUNTRY_ID
+WHERE C.COUNTRY_NAME = 'United Kingdom'
+  AND SUBSTR(E.FIRST_NAME, 3, 1) = 'a';`,
+        sqlExplanation:
+          'Propuesta de consulta generada sobre el esquema HR que enlaza HR.EMPLOYEES con HR.DEPARTMENTS, HR.LOCATIONS y HR.COUNTRIES. En la cláusula WHERE restringe simultáneamente el país a United Kingdom y evalúa con la función de cadena SUBSTR(E.FIRST_NAME, 3, 1) = \'a\' que el tercer carácter del nombre sea exactamente una letra "a" minúscula.',
+        sqlFileUrl: '/evidencias/sql/ejercicio-06/ejercicio-06.sql',
+        sqlFileLabel: 'DESCARGAR SCRIPT (.SQL)',
+        status: 'available',
+      },
+      {
+        slug: 'consulta-7-empleados-con-comision',
+        order: 7,
+        type: 'EJERCICIO PRÁCTICO',
+        title: 'Empleados con comisión no nula',
+        subtitle: 'Evaluación de valores no nulos sobre comisiones en el esquema HR',
+        shortDescription:
+          'Empleados cuya comisión no sea NULL, mostrando nombre y comisión.',
+        context:
+          'Ejercicio desarrollado en Oracle SQL utilizando Oracle SQL Developer sobre el esquema HR de Oracle Database.',
+        statementIntro:
+          'A partir de la tabla de empleados del esquema HR de Oracle Database, se solicita resolver el siguiente requerimiento:',
+        statementBlocks: [
+          {
+            title: 'Requerimiento de la consulta',
+            paragraphs: [
+              'Consultar los empleados cuya comisión no sea NULL, mostrando su nombre y su comisión.',
+            ],
+          },
+        ],
+        objective:
+          'Identificar y proyectar el nombre y la comisión de los empleados del esquema HR que tienen un valor registrado distinto de NULL en su porcentaje de comisión utilizando predicados estándar de Oracle SQL.',
+        sqlCode: `-- Ejercicio 7: Empleados con comisión no nula
+SELECT FIRST_NAME || ' ' || LAST_NAME AS EMPLEADO,
+       COMMISSION_PCT AS COMISION
+FROM HR.EMPLOYEES
+WHERE COMMISSION_PCT IS NOT NULL
+ORDER BY COMMISSION_PCT DESC;`,
+        sqlExplanation:
+          'Propuesta de consulta sobre la tabla HR.EMPLOYEES que proyecta el nombre completo concatenado (FIRST_NAME || \' \' || LAST_NAME) y el porcentaje de comisión (COMMISSION_PCT), filtrando mediante el predicado estándar WHERE COMMISSION_PCT IS NOT NULL únicamente a los empleados que poseen comisión registrada y ordenando el resultado de forma descendente.',
+        sqlFileUrl: '/evidencias/sql/ejercicio-07/ejercicio-07.sql',
+        sqlFileLabel: 'DESCARGAR SCRIPT (.SQL)',
+        status: 'available',
+      },
+      {
+        slug: 'consulta-8-funciones-agregacion-salarios',
+        order: 8,
+        type: 'EJERCICIO PRÁCTICO',
+        title: 'Funciones de agregación sobre salarios',
+        subtitle: 'Suma total, máximo, mínimo y desviación estándar salarial en Oracle SQL',
+        shortDescription:
+          'Funciones de agregación: suma total de salarios, salario máximo, mínimo y desviación estándar.',
+        context:
+          'Ejercicio desarrollado en Oracle SQL utilizando Oracle SQL Developer sobre el esquema HR de Oracle Database.',
+        statementIntro:
+          'Sobre el conjunto de empleados del esquema HR de Oracle Database, se solicita aplicar funciones de agregación para obtener:',
+        statementBlocks: [
+          {
+            title: 'Requerimiento de la consulta',
+            paragraphs: [
+              'Calcular mediante funciones de agregación la suma total de salarios, el salario máximo, el salario mínimo y la desviación estándar de los salarios.',
+            ],
+          },
+        ],
+        objective:
+          'Aplicar las funciones de grupo de Oracle SQL sobre la tabla de empleados del esquema HR para obtener en un único resumen la suma salarial, los valores extremos (máximo y mínimo) y la desviación estándar.',
+        sqlCode: `-- Ejercicio 8: Agregaciones sobre salarios
+SELECT SUM(SALARY) AS SUMA_TOTAL,
+       MAX(SALARY) AS SALARIO_MAXIMO,
+       MIN(SALARY) AS SALARIO_MINIMO,
+       STDDEV(SALARY) AS DESVIACION_ESTANDAR
+FROM HR.EMPLOYEES;`,
+        sqlExplanation:
+          'Propuesta de consulta formulada sobre HR.EMPLOYEES que invoca en una sola proyección las funciones de agregación nativas de Oracle SQL: SUM(SALARY) para la suma total de salarios, MAX(SALARY) para el salario máximo, MIN(SALARY) para el salario mínimo y STDDEV(SALARY) para la desviación estándar salarial.',
+        sqlFileUrl: '/evidencias/sql/ejercicio-08/ejercicio-08.sql',
+        sqlFileLabel: 'DESCARGAR SCRIPT (.SQL)',
+        status: 'available',
+      },
+      {
+        slug: 'consulta-9-clasificacion-salarial-case',
+        order: 9,
+        type: 'EJERCICIO PRÁCTICO',
+        title: 'Clasificación salarial mediante CASE',
+        subtitle: 'Evaluación condicional de rangos salariales en el esquema HR con Oracle SQL',
+        shortDescription:
+          'Clasificación salarial mediante CASE, con los mensajes definidos en el enunciado original.',
+        context:
+          'Ejercicio desarrollado en Oracle SQL utilizando Oracle SQL Developer sobre el esquema HR de Oracle Database.',
+        statementIntro:
+          'A partir de la información salarial de los empleados en el esquema HR de Oracle Database, se plantea el siguiente ejercicio:',
+        statementBlocks: [
+          {
+            title: 'Requerimiento de la consulta',
+            paragraphs: [
+              'Clasificar el salario de los empleados mediante una expresión condicional CASE, asignando los mensajes definidos en el enunciado original según el rango salarial correspondiente.',
+            ],
+          },
+        ],
+        objective:
+          'Construir una proyección condicional en Oracle SQL utilizando la estructura CASE sobre el esquema HR para categorizar el salario de cada empleado con los mensajes especificados en el enunciado del ejercicio.',
+        sqlCode: `-- Ejercicio 9: Clasificación salarial mediante CASE
+SELECT FIRST_NAME || ' ' || LAST_NAME AS EMPLEADO,
+       SALARY AS SALARIO,
+       CASE
+           WHEN SALARY < 1000 THEN 'pobrecito'
+           WHEN SALARY < 3000 THEN 'sigue intentando'
+           WHEN SALARY < 5000 THEN 'ya casi'
+           WHEN SALARY > 10000 THEN 'buenos dias ingeniero'
+           ELSE 'otros'
+       END AS MENSAJE
+FROM HR.EMPLOYEES
+ORDER BY SALARY;`,
+        sqlExplanation:
+          'Propuesta de consulta sobre HR.EMPLOYEES que evalúa secuencialmente el atributo SALARY mediante una expresión CASE buscada (searched CASE), asignando el mensaje definido para cada umbral (< 1000, < 3000, < 5000, > 10000 y cláusula ELSE para el rango restante) y ordenando los resultados de forma ascendente por salario.',
+        sqlFileUrl: '/evidencias/sql/ejercicio-09/ejercicio-09.sql',
+        sqlFileLabel: 'DESCARGAR SCRIPT (.SQL)',
+        status: 'available',
+      },
+      {
+        slug: 'consulta-10-salario-superior-promedio',
+        order: 10,
+        type: 'EJERCICIO PRÁCTICO',
+        title: 'Empleados con salario superior al promedio de su departamento',
+        subtitle: 'Comparación salarial por departamento mediante subconsultas en Oracle SQL',
+        shortDescription:
+          'Empleados cuyo salario sea superior al promedio de su departamento.',
+        context:
+          'Ejercicio desarrollado en Oracle SQL utilizando Oracle SQL Developer sobre el esquema HR de Oracle Database.',
+        statementIntro:
+          'Sobre los empleados y departamentos del esquema HR de Oracle Database, se solicita formular una consulta que resuelva:',
+        statementBlocks: [
+          {
+            title: 'Requerimiento de la consulta',
+            paragraphs: [
+              'Consultar los empleados cuyo salario sea superior al salario promedio de su propio departamento.',
+            ],
+          },
+        ],
+        objective:
+          'Evaluar el salario de cada empleado en relación con el promedio salarial de su departamento dentro del esquema HR mediante el uso de subconsultas en dialecto Oracle SQL.',
+        sqlCode: `-- Ejercicio 10: Salario superior al promedio del departamento
+SELECT E.FIRST_NAME || ' ' || E.LAST_NAME AS EMPLEADO,
+       E.SALARY AS SALARIO,
+       (SELECT AVG(E2.SALARY)
+        FROM HR.EMPLOYEES E2
+        WHERE E2.DEPARTMENT_ID = E.DEPARTMENT_ID) AS PROMEDIO_DEPARTAMENTO
+FROM HR.EMPLOYEES E
+WHERE E.SALARY > (
+    SELECT AVG(E2.SALARY)
+    FROM HR.EMPLOYEES E2
+    WHERE E2.DEPARTMENT_ID = E.DEPARTMENT_ID
+)
+ORDER BY E.DEPARTMENT_ID, E.SALARY DESC;`,
+        sqlExplanation:
+          'Propuesta de consulta basada en subconsultas correlacionadas sobre HR.EMPLOYEES. Para cada fila E, la subconsulta calcula el promedio salarial AVG(E2.SALARY) de los empleados del mismo departamento (E2.DEPARTMENT_ID = E.DEPARTMENT_ID), tanto para proyectar el valor de referencia como para filtrar en el WHERE aquellos empleados con salario estrictamente mayor al promedio departamental.',
+        sqlFileUrl: '/evidencias/sql/ejercicio-10/ejercicio-10.sql',
+        sqlFileLabel: 'DESCARGAR SCRIPT (.SQL)',
+        status: 'available',
+      },
+      {
+        slug: 'consulta-11-cuatro-condiciones-simultaneas',
+        order: 11,
+        type: 'EJERCICIO PRÁCTICO',
+        title: 'Empleados con cuatro condiciones departamentales y jerárquicas',
+        subtitle: 'Subconsultas combinadas de salario, antigüedad y subordinación en Oracle SQL',
+        shortDescription:
+          'Empleados con salario entre el promedio y el máximo departamental, contratados después del más antiguo y sin subordinados directos.',
+        context:
+          'Ejercicio desarrollado en Oracle SQL utilizando Oracle SQL Developer sobre el esquema HR de Oracle Database.',
+        statementIntro:
+          'A partir del esquema HR de Oracle Database, se solicita consultar los empleados que cumplan simultáneamente las siguientes cuatro condiciones:',
+        statementBlocks: [
+          {
+            title: 'Condiciones simultáneas de la consulta',
+            items: [
+              'Salario superior al promedio departamental.',
+              'Contratación posterior al empleado más antiguo del departamento.',
+              'No tener subordinados directos.',
+              'Salario inferior al máximo del departamento.',
+            ],
+          },
+        ],
+        objective:
+          'Integrar subconsultas en Oracle SQL sobre el esquema HR para filtrar los empleados que satisfacen simultáneamente las cuatro restricciones de promedio salarial departamental, antigüedad de contratación, ausencia de subordinados directos y tope salarial del departamento.',
+        sqlCode: `-- Ejercicio 11: Cuatro condiciones simultáneas
+SELECT E.*,
+       D.DEPARTMENT_NAME AS DEPARTAMENTO,
+       (SELECT AVG(E2.SALARY) FROM HR.EMPLOYEES E2
+        WHERE E2.DEPARTMENT_ID = E.DEPARTMENT_ID) AS PROMEDIO_DEPARTAMENTO,
+       (SELECT MIN(E3.HIRE_DATE) FROM HR.EMPLOYEES E3
+        WHERE E3.DEPARTMENT_ID = E.DEPARTMENT_ID) AS FECHA_MAS_ANTIGUO,
+       (SELECT MAX(E4.SALARY) FROM HR.EMPLOYEES E4
+        WHERE E4.DEPARTMENT_ID = E.DEPARTMENT_ID) AS SALARIO_MAXIMO_DEPARTAMENTO,
+       CASE WHEN E.SALARY > (SELECT AVG(E2.SALARY) FROM HR.EMPLOYEES E2
+             WHERE E2.DEPARTMENT_ID = E.DEPARTMENT_ID)
+            THEN 'CUMPLE' ELSE 'NO CUMPLE' END AS CONDICION_1,
+       CASE WHEN E.HIRE_DATE > (SELECT MIN(E3.HIRE_DATE) FROM HR.EMPLOYEES E3
+             WHERE E3.DEPARTMENT_ID = E.DEPARTMENT_ID)
+            THEN 'CUMPLE' ELSE 'NO CUMPLE' END AS CONDICION_2,
+       CASE WHEN NOT EXISTS (SELECT 1 FROM HR.EMPLOYEES SUB
+             WHERE SUB.MANAGER_ID = E.EMPLOYEE_ID)
+            THEN 'CUMPLE' ELSE 'NO CUMPLE' END AS CONDICION_3,
+       CASE WHEN E.SALARY < (SELECT MAX(E4.SALARY) FROM HR.EMPLOYEES E4
+             WHERE E4.DEPARTMENT_ID = E.DEPARTMENT_ID)
+            THEN 'CUMPLE' ELSE 'NO CUMPLE' END AS CONDICION_4
+FROM HR.EMPLOYEES E
+JOIN HR.DEPARTMENTS D ON E.DEPARTMENT_ID = D.DEPARTMENT_ID
+WHERE E.SALARY > (SELECT AVG(E2.SALARY) FROM HR.EMPLOYEES E2
+                  WHERE E2.DEPARTMENT_ID = E.DEPARTMENT_ID)
+  AND E.HIRE_DATE > (SELECT MIN(E3.HIRE_DATE) FROM HR.EMPLOYEES E3
+                     WHERE E3.DEPARTMENT_ID = E.DEPARTMENT_ID)
+  AND NOT EXISTS (SELECT 1 FROM HR.EMPLOYEES SUB
+                  WHERE SUB.MANAGER_ID = E.EMPLOYEE_ID)
+  AND E.SALARY < (SELECT MAX(E4.SALARY) FROM HR.EMPLOYEES E4
+                  WHERE E4.DEPARTMENT_ID = E.DEPARTMENT_ID)
+ORDER BY E.DEPARTMENT_ID, E.SALARY DESC;`,
+        sqlExplanation:
+          'Propuesta de consulta en Oracle SQL sobre HR.EMPLOYEES y HR.DEPARTMENTS que articula cuatro subconsultas correlacionadas en el WHERE (y las proyecta junto con indicadores CASE de verificación): 1) E.SALARY > AVG(SALARY) del departamento; 2) E.HIRE_DATE > MIN(HIRE_DATE) del departamento; 3) predicado NOT EXISTS para asegurar que ningún otro empleado tenga E.EMPLOYEE_ID como MANAGER_ID; y 4) E.SALARY < MAX(SALARY) del departamento.',
+        sqlFileUrl: '/evidencias/sql/ejercicio-11/ejercicio-11.sql',
+        sqlFileLabel: 'DESCARGAR SCRIPT (.SQL)',
+        status: 'available',
+      },
+    ],
   },
   proyecto: {
     slug: 'proyecto',

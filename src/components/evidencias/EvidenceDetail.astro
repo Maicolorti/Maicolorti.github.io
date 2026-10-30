@@ -169,6 +169,35 @@ const { category, evidence } = Astro.props;
     )
   }
 
+  <!-- Objetivo (si existe) -->
+  {
+    evidence.objective && (
+      <section class="pb-16">
+        <div class="max-w-7xl mx-auto px-6">
+          <div class="max-w-4xl">
+            <span
+              class="text-primary font-bold uppercase tracking-[0.25em] text-xs mb-4 block"
+            >
+              Objetivo
+            </span>
+
+            <h2
+              class="text-3xl md:text-4xl font-black tracking-tight text-slate-900 dark:text-white mb-6"
+            >
+              Objetivo del ejercicio
+            </h2>
+
+            <p
+              class="text-lg text-slate-600 dark:text-slate-400 leading-relaxed"
+            >
+              {evidence.objective}
+            </p>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
   <!-- Reglas del negocio (si existen) -->
   {
     evidence.businessRules && evidence.businessRules.length > 0 && (
@@ -549,6 +578,107 @@ const { category, evidence } = Astro.props;
           </div>
         </div>
       </section>
+    )
+  }
+
+  <!-- Solución en Oracle SQL y Explicación (Categoría SQL) -->
+  {
+    (category.slug === 'sql' || evidence.sqlCode !== undefined || evidence.sqlExplanation !== undefined || evidence.sqlFileUrl !== undefined) && (
+      <>
+        <!-- Código Oracle SQL + Botón de descarga .sql -->
+        <section class="pb-16">
+          <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-8 max-w-5xl">
+              <div>
+                <span class="text-primary font-bold uppercase tracking-[0.25em] text-xs mb-3 block">
+                  Código Oracle SQL
+                </span>
+
+                <h2 class="text-3xl md:text-4xl font-black tracking-tight text-slate-900 dark:text-white">
+                  Script de consulta (Esquema HR)
+                </h2>
+              </div>
+
+              <div class="flex flex-wrap items-center gap-3">
+                {
+                  evidence.sqlFileUrl ? (
+                    <a
+                      href={evidence.sqlFileUrl}
+                      download
+                      class="inline-flex items-center justify-center border border-primary text-primary hover:bg-primary hover:text-white px-5 py-2.5 rounded text-sm font-bold uppercase tracking-wider transition-colors"
+                    >
+                      {evidence.sqlFileLabel || "DESCARGAR SCRIPT (.SQL)"}
+                    </a>
+                  ) : (
+                    <span
+                      class="inline-flex items-center justify-center border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-900 text-slate-400 dark:text-slate-500 px-5 py-2.5 rounded text-xs font-bold uppercase tracking-wider cursor-not-allowed select-none"
+                      aria-disabled="true"
+                    >
+                      {evidence.sqlFileLabel || "DESCARGAR .SQL · SOLUCIÓN PENDIENTE"}
+                    </span>
+                  )
+                }
+              </div>
+            </div>
+
+            <div class="max-w-5xl rounded-lg overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-950 text-slate-100">
+              <div class="flex items-center justify-between px-5 py-3 border-b border-slate-800 bg-slate-900/90 text-xs font-mono text-slate-400">
+                <span>Oracle Database · Oracle SQL Developer · Esquema HR</span>
+                <span class="uppercase tracking-widest text-primary font-bold">.sql</span>
+              </div>
+
+              {
+                evidence.sqlCode ? (
+                  <pre class="p-6 md:p-8 overflow-x-auto text-sm md:text-base font-mono leading-relaxed text-slate-100"><code>{evidence.sqlCode}</code></pre>
+                ) : (
+                  <div class="p-8 md:p-10 text-center">
+                    <span class="inline-block px-3.5 py-1.5 rounded border border-primary/40 bg-primary/10 text-primary text-xs font-bold uppercase tracking-widest mb-3">
+                      SOLUCIÓN PENDIENTE
+                    </span>
+                    <p class="text-slate-400 text-sm md:text-base max-w-xl mx-auto leading-relaxed">
+                      El script resuelto en dialecto Oracle SQL sobre el esquema HR se incorporará una vez validado en Oracle SQL Developer.
+                    </p>
+                  </div>
+                )
+              }
+            </div>
+          </div>
+        </section>
+
+        <!-- Explicación de la consulta -->
+        <section class="pb-24">
+          <div class="max-w-7xl mx-auto px-6">
+            <div class="max-w-4xl mb-8">
+              <span class="text-primary font-bold uppercase tracking-[0.25em] text-xs mb-4 block">
+                Explicación
+              </span>
+
+              <h2 class="text-3xl md:text-4xl font-black tracking-tight text-slate-900 dark:text-white mb-6">
+                Explicación técnica de la consulta
+              </h2>
+            </div>
+
+            <div class="max-w-5xl rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/50 p-6 md:p-8">
+              {
+                evidence.sqlExplanation ? (
+                  <p class="text-base md:text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
+                    {evidence.sqlExplanation}
+                  </p>
+                ) : (
+                  <div class="flex flex-col sm:flex-row sm:items-center gap-3 text-slate-500 dark:text-slate-400">
+                    <span class="inline-block w-fit px-3 py-1 rounded border border-slate-300 dark:border-slate-700 text-xs font-bold uppercase tracking-widest text-slate-600 dark:text-slate-300">
+                      SOLUCIÓN PENDIENTE
+                    </span>
+                    <p class="text-sm md:text-base leading-relaxed">
+                      La explicación detallada de las cláusulas, uniones, funciones y condiciones empleadas en la consulta se publicará junto con el script Oracle SQL verificado.
+                    </p>
+                  </div>
+                )
+              }
+            </div>
+          </div>
+        </section>
+      </>
     )
   }
 </main>

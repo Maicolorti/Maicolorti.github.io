@@ -1,0 +1,5 @@
+-- Ejercicio 2: Nombre completo del empleado y de su manager
+SELECT E.FIRST_NAME || ' ' || E.LAST_NAME AS EMPLEADO,
+       M.FIRST_NAME || ' ' || M.LAST_NAME AS MANAGER
+FROM HR.EMPLOYEES E
+LEFT JOIN HR.EMPLOYEES M ON E.MANAGER_ID = M.EMPLOYEE_ID;
