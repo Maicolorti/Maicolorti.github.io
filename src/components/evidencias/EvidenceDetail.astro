@@ -94,6 +94,114 @@ const { category, evidence } = Astro.props;
     </div>
   </section>
 
+  <!-- Enunciado del ejercicio (si existe) -->
+  {
+    (evidence.statementIntro || (evidence.statementBlocks && evidence.statementBlocks.length > 0)) && (
+      <section class="pb-16">
+        <div class="max-w-7xl mx-auto px-6">
+          <div class="max-w-4xl mb-8">
+            <span
+              class="text-primary font-bold uppercase tracking-[0.25em] text-xs mb-4 block"
+            >
+              Enunciado
+            </span>
+
+            <h2
+              class="text-3xl md:text-4xl font-black tracking-tight text-slate-900 dark:text-white mb-6"
+            >
+              Enunciado del ejercicio
+            </h2>
+
+            {
+              evidence.statementIntro && (
+                <p
+                  class="text-lg text-slate-600 dark:text-slate-400 leading-relaxed"
+                >
+                  {evidence.statementIntro}
+                </p>
+              )
+            }
+          </div>
+
+          {
+            evidence.statementBlocks && evidence.statementBlocks.length > 0 && (
+              <div class="space-y-6 max-w-5xl">
+                {
+                  evidence.statementBlocks.map((block) => (
+                    <div class="rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/50 p-6 md:p-8">
+                      <h3 class="text-xl md:text-2xl font-bold text-slate-900 dark:text-white mb-4">
+                        {block.title}
+                      </h3>
+
+                      {
+                        block.paragraphs && block.paragraphs.length > 0 && (
+                          <div class="space-y-3 mb-4 last:mb-0">
+                            {
+                              block.paragraphs.map((paragraph) => (
+                                <p class="text-base md:text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
+                                  {paragraph}
+                                </p>
+                              ))
+                            }
+                          </div>
+                        )
+                      }
+
+                      {
+                        block.items && block.items.length > 0 && (
+                          <ul class="space-y-2.5 list-disc list-inside text-base md:text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
+                            {
+                              block.items.map((item) => (
+                                <li>{item}</li>
+                              ))
+                            }
+                          </ul>
+                        )
+                      }
+                    </div>
+                  ))
+                }
+              </div>
+            )
+          }
+        </div>
+      </section>
+    )
+  }
+
+  <!-- Reglas del negocio (si existen) -->
+  {
+    evidence.businessRules && evidence.businessRules.length > 0 && (
+      <section class="pb-16">
+        <div class="max-w-7xl mx-auto px-6">
+          <div class="max-w-4xl mb-8">
+            <span
+              class="text-primary font-bold uppercase tracking-[0.25em] text-xs mb-4 block"
+            >
+              Reglas del negocio
+            </span>
+
+            <h2
+              class="text-3xl md:text-4xl font-black tracking-tight text-slate-900 dark:text-white"
+            >
+              Especificaciones y restricciones del dominio
+            </h2>
+          </div>
+
+          <div class="max-w-5xl rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/50 p-6 md:p-8">
+            <ul class="space-y-3 list-disc list-inside text-base md:text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
+              {
+                evidence.businessRules.map((rule) => (
+                  <li>{rule}</li>
+                ))
+              }
+            </ul>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
   <!-- Descripción de la actividad (si existe) -->
   {
     evidence.activityDescription && (
@@ -118,6 +226,81 @@ const { category, evidence } = Astro.props;
               {evidence.activityDescription}
             </p>
           </div>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- Supuestos y decisiones de diseño (si existen) -->
+  {
+    (evidence.assumptionsIntro || (evidence.assumptions && evidence.assumptions.length > 0)) && (
+      <section class="pb-16">
+        <div class="max-w-7xl mx-auto px-6">
+          <div class="max-w-4xl mb-8">
+            <span
+              class="text-primary font-bold uppercase tracking-[0.25em] text-xs mb-4 block"
+            >
+              Supuestos y decisiones de diseño
+            </span>
+
+            <h2
+              class="text-3xl md:text-4xl font-black tracking-tight text-slate-900 dark:text-white mb-6"
+            >
+              Criterios y justificación de la solución
+            </h2>
+
+            {
+              evidence.assumptionsIntro && (
+                <p
+                  class="text-lg text-slate-600 dark:text-slate-400 leading-relaxed"
+                >
+                  {evidence.assumptionsIntro}
+                </p>
+              )
+            }
+          </div>
+
+          {
+            evidence.assumptions && evidence.assumptions.length > 0 && (
+              <div class="space-y-6 max-w-5xl">
+                {
+                  evidence.assumptions.map((block) => (
+                    <div class="rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/50 p-6 md:p-8">
+                      <h3 class="text-xl md:text-2xl font-bold text-slate-900 dark:text-white mb-4">
+                        {block.title}
+                      </h3>
+
+                      {
+                        block.paragraphs && block.paragraphs.length > 0 && (
+                          <div class="space-y-3 mb-4 last:mb-0">
+                            {
+                              block.paragraphs.map((paragraph) => (
+                                <p class="text-base md:text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
+                                  {paragraph}
+                                </p>
+                              ))
+                            }
+                          </div>
+                        )
+                      }
+
+                      {
+                        block.items && block.items.length > 0 && (
+                          <ul class="space-y-2.5 list-disc list-inside text-base md:text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
+                            {
+                              block.items.map((item) => (
+                                <li>{item}</li>
+                              ))
+                            }
+                          </ul>
+                        )
+                      }
+                    </div>
+                  ))
+                }
+              </div>
+            )
+          }
         </div>
       </section>
     )
@@ -274,23 +457,42 @@ const { category, evidence } = Astro.props;
 
               {
                 section.image && (
-                  <div
-                    class="rounded-lg overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900"
-                  >
-                    <a
-                      href={section.image}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={section.title || "Ver solución en tamaño completo"}
+                  <>
+                    <div
+                      class="rounded-lg overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900"
                     >
-                      <img
-                        src={section.image}
-                        alt={section.imageAlt || section.title || "Solución del ejercicio"}
-                        class="w-full h-auto object-contain"
-                        loading="lazy"
-                      />
-                    </a>
-                  </div>
+                      <a
+                        href={section.image}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={section.title || "Ver solución en tamaño completo"}
+                      >
+                        <img
+                          src={section.image}
+                          alt={section.imageAlt || section.title || "Solución del ejercicio"}
+                          class="w-full h-auto object-contain"
+                          loading="lazy"
+                        />
+                      </a>
+                    </div>
+
+                    <div
+                      class="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2"
+                    >
+                      <p class="text-sm text-slate-500 dark:text-slate-400">
+                        Haz clic sobre la imagen para visualizarla en tamaño completo.
+                      </p>
+
+                      <a
+                        href={section.image}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="text-sm font-bold text-primary hover:underline"
+                      >
+                        Abrir imagen en tamaño completo →
+                      </a>
+                    </div>
+                  </>
                 )
               }
             </section>
