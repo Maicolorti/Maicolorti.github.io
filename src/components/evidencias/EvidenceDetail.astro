@@ -506,20 +506,35 @@ const { category, evidence } = Astro.props;
                     </div>
 
                     <div
-                      class="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2"
+                      class="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
                     >
                       <p class="text-sm text-slate-500 dark:text-slate-400">
                         Haz clic sobre la imagen para visualizarla en tamaño completo.
                       </p>
 
-                      <a
-                        href={section.image}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="text-sm font-bold text-primary hover:underline"
-                      >
-                        Abrir imagen en tamaño completo →
-                      </a>
+                      <div class="flex flex-wrap items-center gap-4">
+                        <a
+                          href={section.image}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          class="text-sm font-bold text-primary hover:underline"
+                        >
+                          Abrir imagen en tamaño completo →
+                        </a>
+
+                        {
+                          section.pdfUrl && (
+                            <a
+                              href={section.pdfUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              class="inline-flex items-center justify-center border border-primary text-primary hover:bg-primary hover:text-white px-4 py-2 rounded text-xs font-bold uppercase tracking-wider transition-colors"
+                            >
+                              {section.pdfLabel || "VER / DESCARGAR PDF"}
+                            </a>
+                          )
+                        }
+                      </div>
                     </div>
                   </>
                 )
@@ -531,9 +546,69 @@ const { category, evidence } = Astro.props;
     )
   }
 
-  <!-- Recursos y archivos de soporte (cuando no hay imagen de solución) -->
+  <!-- Bloques de código / consultas representativas (ej. Implementación MySQL y JDBC en Proyecto) -->
   {
-    !evidence.solutionImage && (!evidence.sections || evidence.sections.length === 0) && (evidence.pdfUrl || evidence.complementaryFileUrl) && (
+    evidence.codeBlocks && evidence.codeBlocks.length > 0 && (
+      <section class="pb-20">
+        <div class="max-w-7xl mx-auto px-6">
+          <div class="max-w-4xl mb-10">
+            <span class="text-primary font-bold uppercase tracking-[0.25em] text-xs mb-4 block">
+              Implementación técnica y consultas SQL
+            </span>
+
+            <h2 class="text-3xl md:text-4xl font-black tracking-tight text-slate-900 dark:text-white mb-4">
+              Consultas representativas y acceso a datos
+            </h2>
+          </div>
+
+          <div class="space-y-10 max-w-5xl">
+            {
+              evidence.codeBlocks.map((cb) => (
+                <div class="space-y-4">
+                  <div>
+                    <h3 class="text-xl md:text-2xl font-bold text-slate-900 dark:text-white">
+                      {cb.title}
+                    </h3>
+                    {
+                      cb.subtitle && (
+                        <p class="text-sm md:text-base text-slate-500 dark:text-slate-400 mt-1">
+                          {cb.subtitle}
+                        </p>
+                      )
+                    }
+                  </div>
+
+                  <div class="rounded-lg overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-950 text-slate-100">
+                    <div class="flex items-center justify-between px-5 py-3 border-b border-slate-800 bg-slate-900/90 text-xs font-mono text-slate-400">
+                      <span>{cb.subtitle || cb.title}</span>
+                      <span class="uppercase tracking-widest text-primary font-bold">
+                        {cb.badge || ".sql"}
+                      </span>
+                    </div>
+                    <pre class="p-6 md:p-8 overflow-x-auto text-sm md:text-base font-mono leading-relaxed text-slate-100"><code>{cb.code}</code></pre>
+                  </div>
+
+                  {
+                    cb.explanation && (
+                      <div class="rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/50 p-5 md:p-6">
+                        <p class="text-sm md:text-base text-slate-600 dark:text-slate-400 leading-relaxed">
+                          {cb.explanation}
+                        </p>
+                      </div>
+                    )
+                  }
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- Recursos y archivos de soporte (cuando no hay imagen de solución o cuando existen recursos múltiples) -->
+  {
+    ((!evidence.solutionImage && (!evidence.sections || evidence.sections.length === 0) && (evidence.pdfUrl || evidence.complementaryFileUrl)) || (evidence.resources && evidence.resources.length > 0)) && (
       <section class="pb-24">
         <div class="max-w-7xl mx-auto px-6">
           <div class="rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 p-8 md:p-10">
@@ -551,7 +626,7 @@ const { category, evidence } = Astro.props;
 
             <div class="flex flex-wrap items-center gap-4">
               {
-                evidence.pdfUrl && (
+                !evidence.solutionImage && (!evidence.sections || evidence.sections.length === 0) && evidence.pdfUrl && (
                   <a
                     href={evidence.pdfUrl}
                     target="_blank"
@@ -564,7 +639,7 @@ const { category, evidence } = Astro.props;
               }
 
               {
-                evidence.complementaryFileUrl && (
+                !evidence.solutionImage && (!evidence.sections || evidence.sections.length === 0) && evidence.complementaryFileUrl && (
                   <a
                     href={evidence.complementaryFileUrl}
                     download
@@ -573,6 +648,24 @@ const { category, evidence } = Astro.props;
                     {evidence.complementaryFileLabel || "DESCARGAR ARCHIVO (.XLSX)"}
                   </a>
                 )
+              }
+
+              {
+                evidence.resources && evidence.resources.map((res, idx) => (
+                  <a
+                    href={res.url}
+                    target={res.download ? undefined : "_blank"}
+                    rel={res.download ? undefined : "noopener noreferrer"}
+                    download={res.download ? true : undefined}
+                    class={
+                      idx === 0 && !evidence.pdfUrl
+                        ? "inline-flex items-center justify-center border border-primary text-primary hover:bg-primary hover:text-white px-5 py-2.5 rounded text-sm font-bold uppercase tracking-wider transition-colors"
+                        : "inline-flex items-center justify-center border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:border-primary hover:text-primary px-5 py-2.5 rounded text-sm font-bold uppercase tracking-wider transition-colors shadow-xs"
+                    }
+                  >
+                    {res.label}
+                  </a>
+                ))
               }
             </div>
           </div>

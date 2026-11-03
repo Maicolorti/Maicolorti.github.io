@@ -6,12 +6,28 @@ export interface EvidenceSection {
   description?: string;
   image?: string;
   imageAlt?: string;
+  pdfUrl?: string;
+  pdfLabel?: string;
 }
 
 export interface EvidenceDetailBlock {
   title: string;
   paragraphs?: string[];
   items?: string[];
+}
+
+export interface EvidenceResource {
+  label: string;
+  url: string;
+  download?: boolean;
+}
+
+export interface EvidenceCodeBlock {
+  title: string;
+  subtitle?: string;
+  badge?: string;
+  code: string;
+  explanation?: string;
 }
 
 export interface EvidenceItem {
@@ -33,6 +49,7 @@ export interface EvidenceItem {
   sqlExplanation?: string;
   sqlFileUrl?: string;
   sqlFileLabel?: string;
+  codeBlocks?: EvidenceCodeBlock[];
   solutionImage?: string;
   solutionAlt?: string;
   sections?: EvidenceSection[];
@@ -40,6 +57,7 @@ export interface EvidenceItem {
   pdfLabel?: string;
   complementaryFileUrl?: string;
   complementaryFileLabel?: string;
+  resources?: EvidenceResource[];
   status: EvidenceStatus;
 }
 
@@ -968,10 +986,597 @@ ORDER BY E.DEPARTMENT_ID, E.SALARY DESC;`,
   proyecto: {
     slug: 'proyecto',
     name: 'Proyecto',
-    title: 'Proyecto | Bases de Datos 1',
+    title: 'Proyecto · Café & Ludoteca | Bases de Datos 1',
     description:
-      'Desarrollo integral del proyecto final de la asignatura Bases de Datos 1, articulando requerimientos, modelado conceptual, esquema relacional y consultas.',
-    evidences: [],
+      'Desarrollo integral del proyecto final de Bases de Datos 1 (Café & Ludoteca), articulando el levantamiento de requerimientos, el modelado conceptual y relacional, la normalización en 1FN, 2FN y 3FN, la implementación en MySQL, la arquitectura cliente-servidor en Java/Angular y las pruebas funcionales.',
+    evidences: [
+      {
+        slug: 'cafe-y-ludoteca',
+        order: 1,
+        type: 'PROYECTO',
+        title: 'Café & Ludoteca',
+        subtitle: 'Descripción del proyecto, alcance, actores, reglas del negocio y requerimientos',
+        shortDescription:
+          'Formulación académica del sistema de información para la gestión de inventario de juegos de mesa, préstamos, reservas de mesas, socios, membresías y fidelización.',
+        context:
+          'Café & Ludoteca es un establecimiento que combina el servicio de cafetería especializada con el préstamo y alquiler de juegos de mesa tanto en las instalaciones del local como a domicilio para sus socios afiliados. El proyecto desarrolla el sistema de información transaccional que centraliza el catálogo de juegos, sus unidades físicas, expansiones, reservas de mesas temáticas, préstamos verificados por empleados y programas de membresías y fidelización.',
+        statementIntro:
+          'A partir del documento de propuesta académica (BASES DE DATOS-PROPUESTA), se estructuran el contexto operativo, la problemática del negocio, los objetivos, el alcance del sistema, los actores y los requerimientos funcionales y no funcionales:',
+        statementBlocks: [
+          {
+            title: '1. Contexto del negocio y problemática',
+            paragraphs: [
+              'El establecimiento administra un catálogo diverso de juegos de mesa clasificados por categorías, rangos de edad, número mínimo y máximo de jugadores, reglamento, componentes internos y expansiones, además de múltiples unidades físicas por cada título con estados de conservación individuales.',
+              'De forma manual o desarticulada, el negocio enfrentaba dificultades críticas: pérdida o deterioro no rastreado de piezas y componentes al retornar los préstamos, cruces de horarios en la asignación de mesas temáticas, falta de control sobre la vigencia de las membresías de los socios habilitados para préstamos a domicilio y ausencia de trazabilidad sobre el historial de préstamos para otorgar beneficios a clientes frecuentes.',
+            ],
+          },
+          {
+            title: '2. Objetivo general y objetivos específicos',
+            paragraphs: [
+              'Objetivo general: Diseñar, modelar, normalizar e implementar una base de datos relacional y una aplicación web multicapa para gestionar de manera íntegra el inventario de juegos de mesa, las reservas de espacios, los préstamos locales y a domicilio, las membresías de socios y el programa de fidelización de Café & Ludoteca.',
+            ],
+            items: [
+              'Estructurar un catálogo detallado de juegos de mesa que controle tanto la ficha técnica de cada título (JUEGO_MESA, CATEGORIA, ELEMENTO_JUEGO, EXPANSION) como la disponibilidad e integridad física de cada ejemplar (UNIDAD_JUEGO).',
+              'Gestionar el ciclo completo de reservas de mesas temáticas (MESA, RESERVA, RESERVA_JUEGO), permitiendo a los clientes preseleccionar los juegos que desean utilizar durante su visita.',
+              'Controlar el registro de préstamos en local y a domicilio (PRESTAMO, PRESTAMO_UNIDAD_JUEGO), vinculando al cliente solicitante, al empleado responsable de verificar los componentes y a las unidades físicas entregadas.',
+              'Administrar la especialización de clientes en socios afiliados con planes de membresía y beneficios (SOCIO, MEMBRESIA, BENEFICIO) y clientes frecuentes con acumulación de puntos y niveles de fidelidad (CLIENTE_FRECUENTE).',
+            ],
+          },
+          {
+            title: '3. Alcance del sistema (qué incluye y qué no incluye)',
+            paragraphs: [
+              'El alcance delimita con precisión los procesos cubiertos por la base de datos y la aplicación web frente a operaciones externas al dominio académico:',
+            ],
+            items: [
+              'Incluye: Gestión CRUD de clientes, teléfonos, socios, membresías, beneficios y clientes frecuentes; administración de empleados; catálogo de juegos de mesa, categorías, elementos internos, expansiones y unidades físicas; gestión de mesas, reservas con preselección de juegos y préstamos con verificación de estado de componentes.',
+              'No incluye: Facturación electrónica ante la DIAN ni pasarelas de pago bancarias en línea; control de inventario de insumos de cocina o cafetería; ni logística de transporte externo para entregas a domicilio.',
+            ],
+          },
+          {
+            title: '4. Actores del sistema',
+            items: [
+              'Administrador: Gestiona de forma integral el catálogo de juegos, unidades físicas, categorías, expansiones, elementos de juego, mesas, empleados, clientes, socios, membresías y parámetros de fidelización.',
+              'Empleado: Atiende la operación diaria en sala, registra y audita préstamos locales y a domicilio, verifica el estado de los componentes al momento de la salida y devolución, y consulta reservas y disponibilidad del catálogo.',
+              'CLIENTE (General): Persona registrada en el sistema con sus datos básicos y teléfonos de contacto; puede consultar el catálogo, solicitar préstamos en el local y realizar reservas de mesas temáticas.',
+              'Socio (Subtipo de Cliente): Cliente con fecha de afiliación y membresía registrada (MEMBRESIA y BENEFICIO) que accede a beneficios exclusivos como préstamos a domicilio y descuentos según su plan.',
+              'Cliente_Frecuente (Subtipo de Cliente): Cliente que acumula puntos por su actividad en la ludoteca y alcanza niveles de fidelidad (inicial, plata, oro) para obtener recompensas operativas.',
+            ],
+          },
+          {
+            title: '5. Requerimientos Funcionales (RF-01 a RF-16)',
+            items: [
+              'RF-01: Registrar, consultar, actualizar y eliminar juegos de mesa identificando número de serie, nombre, reglamento, cantidad mínima y máxima de jugadores, edad mínima y duración de partida.',
+              'RF-02: Asociar una o varias categorías temáticas a cada juego de mesa del catálogo.',
+              'RF-03: Registrar los elementos o piezas internas que componen cada juego de mesa para su verificación en préstamos.',
+              'RF-04: Administrar las expansiones asociadas a un juego base, detallando nombre, descripción y contenido adicional.',
+              'RF-05: Controlar las unidades físicas (ejemplares) de cada juego de mesa mediante código de ejemplar, estado operativo y observaciones.',
+              'RF-06: Gestionar la información personal de los clientes y sus múltiples números telefónicos de contacto.',
+              'RF-07: Registrar la afiliación de clientes como socios y administrar el historial y estado de sus membresías (plan, tarifa, fecha de inicio, fecha de fin y estado).',
+              'RF-08: Definir y consultar los beneficios asociados a cada membresía.',
+              'RF-09: Administrar el puntaje acumulado y el nivel de fidelidad de los clientes frecuentes.',
+              'RF-10: Gestionar el registro de empleados del establecimiento (documento, nombre, apellido, correo y cargo).',
+              'RF-11: Administrar las mesas disponibles en el local indicando capacidad de personas, temática y ubicación.',
+              'RF-12: Registrar reservas de mesas asociando cliente, mesa, fecha y horario.',
+              'RF-13: Permitir la preselección de uno o varios juegos de mesa dentro de una reserva.',
+              'RF-14: Registrar préstamos de juegos de mesa especificando fecha de salida, fecha de devolución, tipo de préstamo (Local o Domicilio), estado de componentes, cliente solicitante y empleado responsable.',
+              'RF-15: Vincular una o más unidades físicas específicas de juegos de mesa a cada préstamo registrado.',
+              'RF-16: Consultar la trazabilidad de préstamos, reservas y estado del inventario desde las vistas operativas de cliente, empleado y administrador.',
+            ],
+          },
+          {
+            title: '6. Requerimientos No Funcionales (RNF-01 a RNF-08)',
+            items: [
+              'RNF-01 (Integridad referencial): El motor relacional debe garantizar la consistencia de claves primarias y foráneas en todas las tablas del esquema.',
+              'RNF-02 (Normalización): El esquema de base de datos debe cumplir hasta la Tercera Forma Normal (3FN), evitando redundancias y anomalías de actualización.',
+              'RNF-03 (Arquitectura en capas): El backend debe separar estrictamente las responsabilidades en capas de Controladores REST, Servicios, Mappers, Repositorios JDBC y Configuración de conexión.',
+              'RNF-04 (Interoperabilidad REST): La comunicación entre el frontend y el backend debe realizarse mediante servicios web RESTful con carga útil en formato JSON.',
+              'RNF-05 (Seguridad en consultas): Todas las operaciones SQL desde Java deben emplear PreparedStatement para prevenir inyección SQL.',
+              'RNF-06 (Disponibilidad en red privada): El servidor de base de datos debe ser accesible de forma segura por el equipo de desarrollo mediante una red privada virtual (Tailscale).',
+              'RNF-07 (Usabilidad y diseño adaptable): La interfaz web en Angular debe ofrecer vistas diferenciadas por rol (Cliente, Empleado y Administrador) con navegación clara.',
+              'RNF-08 (Mantenibilidad y control de versiones): El código fuente debe gestionarse en un repositorio centralizado en GitHub bajo estándares de compilación Maven y Node.js.',
+            ],
+          },
+        ],
+        businessRules: [
+          'RN-01: Todo juego de mesa se identifica por su número de serie (num_serie) y puede contar con múltiples unidades físicas diferenciadas por un código parcial (codigo) dependiente del juego.',
+          'RN-02: Un cliente puede desempeñar simultáneamente o por separado los roles de Socio y Cliente Frecuente (especialización solapada y parcial respecto a CLIENTE).',
+          'RN-03: Los préstamos pueden ser de tipo Local (en mesa) o a Domicilio; los préstamos a domicilio están orientados a socios con membresía activa.',
+          'RN-04: Todo préstamo debe ser atendido y verificado por un único empleado responsable, quien registra el estado de los componentes al entregar y recibir las unidades.',
+          'RN-05: Un préstamo puede incluir una o varias unidades físicas de juegos, y cada unidad física puede participar en distintos préstamos a lo largo del tiempo.',
+          'RN-06: Una reserva se asigna a un cliente y a una mesa específica en una fecha y horario determinados, permitiendo preseleccionar uno o más títulos del catálogo.',
+          'RN-07: Cada socio puede adquirir membresías a lo largo del tiempo, y cada membresía otorga uno o varios beneficios registrados individualmente.',
+        ],
+        assumptionsIntro:
+          'El documento de propuesta establece además seis supuestos de diseño y la Estructura de Desglose del Trabajo (EDT) que guían el desarrollo académico del proyecto:',
+        assumptions: [
+          {
+            title: 'Supuestos de diseño documentados (Supuesto 1 a Supuesto 6)',
+            items: [
+              'Supuesto 1: El documento de identidad (documento) es único para cada cliente y para cada empleado dentro del sistema.',
+              'Supuesto 2: Las unidades físicas (UNIDAD_JUEGO) se modelan como entidad débil frente a JUEGO_MESA, identificadas por la clave compuesta (num_serie, codigo).',
+              'Supuesto 3: En una reserva el cliente preselecciona títulos del catálogo (JUEGO_MESA), mientras que en el préstamo efectivo se entregan ejemplares físicos concretos (UNIDAD_JUEGO).',
+              'Supuesto 4: Un cliente puede registrar múltiples números de teléfono, por lo que el atributo multivaluado se transforma en la tabla TELEFONO con clave compuesta (documento, telefono).',
+              'Supuesto 5: Las categorías de un juego y los beneficios de una membresía se estructuran en tablas independientes (CATEGORIA y BENEFICIO) para garantizar atomicidad en 1FN.',
+              'Supuesto 6: La verificación física de piezas y componentes al cierre del préstamo se resume en el atributo estado_componentes del préstamo junto con las observaciones de cada unidad física.',
+            ],
+          },
+          {
+            title: 'Estructura de Desglose del Trabajo (EDT)',
+            paragraphs: [
+              'La planificación del proyecto se organizó en cinco paquetes de trabajo representados en el diagrama EDT adjunto: 1. Gestión del proyecto (control de versiones); 2. Modelaje (Modelo Entidad-Relación, reducción a tablas, modelo relacional y normalización); 3. Documentación (implementación RDBMS, scripts SQL, presupuesto e identificación de stakeholders); 4. Desarrollo del back-end (Maven y conexión BD, entidades y DTO, Mappers, Repositorios JDBC, Servicios, Controladores REST y manejo de excepciones); y 5. Desarrollo del front-end (entorno Angular, componentes reutilizables, interfaces por rol, navegación e integración REST).',
+            ],
+          },
+        ],
+        solutionImage: '/evidencias/proyecto/edt-cafe-ludoteca.png',
+        solutionAlt: 'Estructura de Desglose del Trabajo (EDT) del proyecto Café & Ludoteca',
+        pdfUrl: '/evidencias/proyecto/propuesta-cafe-ludoteca.pdf',
+        pdfLabel: 'PROPUESTA DEL PROYECTO (PDF)',
+        complementaryFileUrl: '/evidencias/proyecto/edt-cafe-ludoteca.pdf',
+        complementaryFileLabel: 'DESCARGAR EDT (.PDF)',
+        status: 'available',
+      },
+      {
+        slug: 'modelado-base-datos',
+        order: 2,
+        type: 'PROYECTO',
+        title: 'Modelado de la base de datos',
+        subtitle: 'Modelo Entidad–Relación Extendido (MER) y transformación al Modelo Relacional',
+        shortDescription:
+          'Diseño conceptual del dominio Café & Ludoteca y su reducción sistemática a tablas relacionales con claves primarias, foráneas y tablas asociativas.',
+        context:
+          'El diseño de datos del proyecto Café & Ludoteca se desarrolló en dos etapas complementarias: primero, la construcción del Modelo Entidad–Relación Extendido (MER) para capturar fielmente la semántica del negocio; y segundo, la transformación formal hacia el esquema relacional mediante las reglas de reducción a tablas.',
+        statementIntro:
+          'A continuación se detalla la estructura conceptual de entidades, relaciones, jerarquías de especialización y entidades débiles, así como la justificación técnica de su paso al modelo relacional:',
+        statementBlocks: [
+          {
+            title: '1. Explicación general de entidades y relaciones en el MER original',
+            paragraphs: [
+              'El Modelo Entidad–Relación original estructura el dominio alrededor de tres núcleos operativos interconectados:',
+            ],
+            items: [
+              'Núcleo de Clientes y Fidelización: La entidad fuerte CLIENTE (identificada por documento, con atributo compuesto nombre desglosado en primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, fecha_nacimiento, direccion y atributo multivaluado telefono) se especializa de forma solapada en dos subtipos: SOCIO (con fecha_afiliacion) y CLIENTE_FRECUENTE (con puntos_acumulados y nivel_fidelidad). El subtipo SOCIO se relaciona con MEMBRESIA (id_membresia, plan, tarifa, estado, fecha_inicio, fecha_fin), la cual posee la entidad débil/multivaluada BENEFICIO.',
+              'Núcleo de Catálogo e Inventario de Juegos: La entidad fuerte JUEGO_MESA (identificada por num_serie, con nombre, reglamento, cantidad_minima_jugadores, cantidad_maxima_jugadores, edad_minima y duracion_partida) agrupa sus categorías temáticas (CATEGORIA), sus piezas internas (ELEMENTO_JUEGO), sus expansiones oficiales (EXPANSION) y posee como entidad débil a UNIDAD_JUEGO (identificada parcialmente por codigo, con estado y observaciones), permitiendo distinguir entre el título abstracto del catálogo y cada caja física disponible en estantería.',
+              'Núcleo Operativo de Reservas y Préstamos: Por un lado, CLIENTE realiza RESERVA (id_reserva, fecha, horario), la cual ocupa una MESA (id_mesa, capacidad, tematica, ubicacion) e incluye una relación muchos a muchos con JUEGO_MESA para preseleccionar títulos. Por otro lado, PRESTAMO (id_prestamo, fecha_salida, fecha_devolucion, tipo_prestamo, estado_componentes) vincula al CLIENTE que recibe el préstamo, al EMPLEADO (documento, nombre, apellido, correo, cargo) que lo gestiona y, mediante una relación N:M, a las unidades físicas específicas (UNIDAD_JUEGO) entregadas.',
+            ],
+          },
+          {
+            title: '2. Justificación del paso del Modelo Entidad–Relación al Modelo Relacional',
+            paragraphs: [
+              'La transformación del MER al modelo relacional aplica rigurosamente las reglas de reducción de esquemas conceptuales para garantizar que toda la semántica quede expresada únicamente mediante tablas, claves primarias (PK) y claves foráneas (FK):',
+            ],
+            items: [
+              'Transformación de atributos compuestos y multivaluados: El atributo compuesto nombre de CLIENTE se aplana en cuatro columnas atómicas (primer_nombre, segundo_nombre, primer_apellido, segundo_apellido), mientras que el atributo multivaluado telefono origina la tabla TELEFONO con clave primaria compuesta (documento, telefono) y clave foránea hacia CLIENTE.',
+              'Transformación de entidades débiles: UNIDAD_JUEGO hereda la clave primaria de su entidad propietaria JUEGO_MESA, conformando la clave primaria compuesta (num_serie, codigo). Del mismo modo, CATEGORIA se identifica por (num_serie, num_categoria) y BENEFICIO por (id_membresia, id_beneficio).',
+              'Transformación de la jerarquía de especialización (CLIENTE → SOCIO / CLIENTE_FRECUENTE): Se aplica la alternativa de tablas por subtipo vinculadas mediante la clave primaria del supertipo. Tanto SOCIO como CLIENTE_FRECUENTE utilizan documento como clave primaria y simultáneamente como clave foránea hacia CLIENTE(documento), permitiendo que un mismo cliente pueda existir en una, ambas o ninguna de las tablas especializadas sin generar valores nulos.',
+              'Resolución de relaciones muchos a muchos (N:M): La relación entre RESERVA y JUEGO_MESA se materializa en la tabla asociativa RESERVA_JUEGO con clave primaria compuesta (id_reserva, num_serie). Asimismo, la relación entre PRESTAMO y la entidad débil UNIDAD_JUEGO se transforma en la tabla asociativa PRESTAMO_UNIDAD_JUEGO, cuya clave primaria compuesta (id_prestamo, num_serie, codigo) referencia tanto a PRESTAMO(id_prestamo) como a la clave compuesta de UNIDAD_JUEGO(num_serie, codigo).',
+              'Relaciones uno a muchos (1:N): Se propagan como claves foráneas en el lado N: documento y documento_empleado en PRESTAMO; documento e id_mesa en RESERVA; documento en MEMBRESIA; y num_serie en EXPANSION y ELEMENTO_JUEGO.',
+            ],
+          },
+        ],
+        sections: [
+          {
+            title: '1. Modelo Entidad–Relación Original (MER)',
+            description:
+              'Diagrama conceptual original (PROYECTO FINAL_MRE.drawio.pdf) donde se representan las entidades fuertes, entidades débiles con doble rectángulo, jerarquía de especialización de clientes, atributos simples, compuestos y multivaluados, y las cardinalidades de cada relación del negocio.',
+            image: '/evidencias/proyecto/mer-original.png',
+            imageAlt: 'Modelo Entidad-Relación original del proyecto Café & Ludoteca',
+            pdfUrl: '/evidencias/proyecto/mer-original.pdf',
+            pdfLabel: 'ABRIR / DESCARGAR MER ORIGINAL (PDF)',
+          },
+          {
+            title: '2. Modelo Relacional Transformado (Reducción a tablas)',
+            description:
+              'Diagrama de transformación relacional (Transformacion_ProyectoFinal.drawio.pdf) resultante de aplicar las reglas de paso a tablas sobre el MER: incluye el desglose de claves primarias simples y compuestas, propagación de claves foráneas y creación de tablas asociativas para relaciones N:M y atributos multivaluados.',
+            image: '/evidencias/proyecto/mer-transformado.png',
+            imageAlt: 'Modelo transformado a esquema relacional del proyecto Café & Ludoteca',
+            pdfUrl: '/evidencias/proyecto/mer-transformado.pdf',
+            pdfLabel: 'ABRIR / DESCARGAR MODELO TRANSFORMADO (PDF)',
+          },
+        ],
+        resources: [
+          {
+            label: 'VER / DESCARGAR MER ORIGINAL (.PDF)',
+            url: '/evidencias/proyecto/mer-original.pdf',
+          },
+          {
+            label: 'VER / DESCARGAR MODELO TRANSFORMADO (.PDF)',
+            url: '/evidencias/proyecto/mer-transformado.pdf',
+          },
+        ],
+        status: 'available',
+      },
+      {
+        slug: 'normalizacion-base-datos',
+        order: 3,
+        type: 'PROYECTO',
+        title: 'Normalización de la base de datos',
+        subtitle: 'Análisis de Primera, Segunda y Tercera Forma Normal (1FN, 2FN y 3FN) del esquema relacional',
+        shortDescription:
+          'Verificación formal de atomicidad, dependencias funcionales completas y ausencia de dependencias transitivas sobre las tablas del proyecto Café & Ludoteca.',
+        context:
+          'Con el fin de asegurar la calidad estructural del esquema relacional de Café & Ludoteca y prevenir anomalías de inserción, borrado y actualización, se realizó el estudio detallado de normalización en un libro de cálculo estructurado por hojas, evaluando cada relación frente a la Primera Forma Normal (1FN), Segunda Forma Normal (2FN) y Tercera Forma Normal (3FN).',
+        statementIntro:
+          'El análisis de normalización evalúa la estructura de atributos, claves primarias declaradas, claves foráneas, filas ilustrativas y justificación formal de 1FN, 2FN y 3FN:',
+        statementBlocks: [
+          {
+            title: '1. Propósito y metodología del proceso de normalización (1FN, 2FN y 3FN)',
+            items: [
+              'Primera Forma Normal (1FN): Garantizar que todos los dominios sean atómicos, eliminando grupos repetitivos y atributos compuestos o multivaluados. En el proyecto, el nombre del cliente se separó en cuatro atributos individuales y los teléfonos, categorías de juegos y beneficios de membresías se ubicaron en relaciones independientes (TELEFONO, CATEGORIA, BENEFICIO).',
+              'Segunda Forma Normal (2FN): Verificar que toda tabla en 1FN cuyos identificadores sean compuestos no presente dependencias funcionales parciales de atributos no primos hacia solo una fracción de la clave primaria. En las tablas con clave primaria simple, el cumplimiento de 2FN es directo por definición.',
+              'Tercera Forma Normal (3FN): Comprobar que ningún atributo no clave dependa transitivamente de la clave primaria a través de otro atributo no clave, asegurando que cada atributo descriptivo dependa directa y exclusivamente de la clave de su relación.',
+            ],
+          },
+          {
+            title: '2. Catálogo de tablas normalizadas, claves primarias (PK) y claves foráneas (FK)',
+            paragraphs: [
+              'En el libro de Excel se encuentran desarrolladas 17 hojas de tablas individuales junto con la hoja de Índice:',
+            ],
+            items: [
+              '1. BENEFICIO — PK compuesta: (id_membresia, id_beneficio) | FK: id_membresia → MEMBRESIA. Atributo: beneficio.',
+              '2. CATEGORIA — PK compuesta: (num_serie, num_categoria) | FK: num_serie → JUEGO_MESA. Atributo: categoria.',
+              '3. CLIENTE — PK simple: (documento) | Atributos: fecha_nacimiento, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, direccion.',
+              '4. CLIENTE_FRECUENTE — PK simple: (documento) | FK: documento → CLIENTE. Atributos: puntos_acumulados, nivel_fidelidad.',
+              '5. ELEMENTO_JUEGO — PK simple: (id_elemento_juego) | FK: num_serie → JUEGO_MESA. Atributo: elemento_juego.',
+              '6. EMPLEADO — PK simple: (documento) | Atributos: nombre, apellido, correo, cargo.',
+              '7. EXPANSION — PK simple: (id_expansion) | FK: num_serie → JUEGO_MESA. Atributos: nombre, descripcion, contenido_adicional.',
+              '8. JUEGO_MESA — PK simple: (num_serie) | Atributos: nombre, reglamento, cantidad_minima_jugadores, cantidad_maxima_jugadores, edad_minima, duracion_partida.',
+              '9. MEMBRESIA — PK simple: (id_membresia) | FK: documento → CLIENTE. Atributos: plan, estado, fecha_inicio, tarifa, fecha_fin.',
+              '10. MESA — PK simple: (id_mesa) | Atributos: capacidad, tematica, ubicacion.',
+              '11. PRESTAMO — PK simple: (id_prestamo) | FK: documento → CLIENTE, documento_empleado → EMPLEADO. Atributos: fecha_salida, fecha_devolucion, tipo_prestamo, estado_componentes.',
+              '12. PRESTAMO_UNIDAD_JUEGO — PK compuesta: (id_prestamo, num_serie, codigo) | FK: id_prestamo → PRESTAMO, (num_serie, codigo) → UNIDAD_JUEGO.',
+              '13. RESERVA — PK simple: (id_reserva) | FK: documento → CLIENTE, id_mesa → MESA. Atributos: fecha, horario.',
+              '14. RESERVA_JUEGO — PK compuesta: (id_reserva, num_serie) | FK: id_reserva → RESERVA, num_serie → JUEGO_MESA.',
+              '15. SOCIO — PK simple: (documento) | FK: documento → CLIENTE. Atributo: fecha_afiliacion.',
+              '16. UNIDAD_JUEGO — PK compuesta: (num_serie, codigo) | FK: num_serie → JUEGO_MESA. Atributos: observaciones, estado.',
+              '17. TELEFONO — PK compuesta: (documento, telefono) | FK: documento → CLIENTE.',
+            ],
+          },
+          {
+            title: '3. Ejemplos representativos del análisis 1FN, 2FN y 3FN',
+            items: [
+              'UNIDAD_JUEGO (PK compuesta: num_serie, codigo): Cumple 1FN porque cada ejemplar físico ocupa una fila con valores atómicos; cumple 2FN porque tanto observaciones como estado dependen de la combinación completa del juego (num_serie) y el número de ejemplar (codigo), no solo del juego; y cumple 3FN porque estado y observaciones califican directamente al ejemplar sin dependencias transitivas.',
+              'PRESTAMO_UNIDAD_JUEGO (PK compuesta: id_prestamo, num_serie, codigo): Cumple 1FN al registrar cada unidad prestada en una tupla individual; cumple 2FN y 3FN porque todos sus atributos forman parte de la clave primaria compuesta que materializa la relación N:M entre préstamos y ejemplares físicos.',
+              'CLIENTE (PK simple: documento): Cumple 1FN tras descomponer el nombre completo en cuatro columnas atómicas y extraer los teléfonos a la tabla TELEFONO; cumple 2FN por poseer clave primaria simple; y cumple 3FN porque la fecha de nacimiento, nombres, apellidos y dirección dependen directamente del documento del cliente.',
+            ],
+          },
+        ],
+        assumptionsIntro:
+          'Durante el análisis de normalización se documentaron criterios específicos sobre dependencias funcionales sujetas a reglas del dominio y una observación documental sobre el archivo fuente:',
+        assumptions: [
+          {
+            title: 'Decisiones de diseño sobre dependencias en 3FN',
+            items: [
+              'En CLIENTE_FRECUENTE (documento, puntos_acumulados, nivel_fidelidad), la tabla cumple 3FN bajo la decisión de diseño de que el nivel de fidelidad es asignado administrativamente; se deja constancia de que, si el nivel se determinara estrictamente por una tabla fija de rangos de puntos, existiría una dependencia funcional puntos_acumulados → nivel_fidelidad susceptible de separarse en un catálogo de niveles.',
+              'En MEMBRESIA (id_membresia, plan, estado, fecha_inicio, documento, tarifa, fecha_fin), cumple 3FN considerando que la tarifa puede variar por promoción o convenio en cada contrato de membresía; si la tarifa dependiera exclusivamente del nombre del plan, podría separarse en una entidad catálogo de planes.',
+              'En PRESTAMO, como la relación entre cliente y préstamo es 1:N (un préstamo pertenece a un único cliente y un cliente puede solicitar múltiples préstamos), la vinculación se resuelve directamente mediante la clave foránea documento dentro de la tabla PRESTAMO, sin requerir una tabla intermedia adicional.',
+            ],
+          },
+          {
+            title: 'Nota de verificación documental sobre el libro de Excel',
+            paragraphs: [
+              'Al inspeccionar el archivo original Normalizacion_Cafe_y_Ludoteca_18_tablas (1) (1).xlsx, se observa que la hoja Índice enumera 18 ítems incluyendo en la posición 5 la entrada CLIENTE_PRESTAMO ("Relación entre clientes y préstamos registrados"). Sin embargo, el libro contiene exactamente 17 hojas de tablas (no existe la hoja CLIENTE_PRESTAMO), debido a que en el modelo relacional definitivo y en la base de datos MySQL la relación 1:N entre CLIENTE y PRESTAMO quedó incorporada directamente mediante la clave foránea documento en la tabla PRESTAMO. Se conserva el archivo Excel original íntegro sin alteraciones.',
+            ],
+          },
+        ],
+        complementaryFileUrl: '/evidencias/proyecto/normalizacion-cafe-ludoteca.xlsx',
+        complementaryFileLabel: 'DESCARGAR MATRIZ DE NORMALIZACIÓN (.XLSX)',
+        resources: [
+          {
+            label: 'DESCARGAR NORMALIZACIÓN EN EXCEL (.XLSX)',
+            url: '/evidencias/proyecto/normalizacion-cafe-ludoteca.xlsx',
+            download: true,
+          },
+        ],
+        status: 'available',
+      },
+      {
+        slug: 'implementacion-mysql',
+        order: 4,
+        type: 'PROYECTO',
+        title: 'Implementación en MySQL',
+        subtitle: 'Esquema físico en MySQL Server, integridad referencial, acceso JDBC y consultas SQL',
+        shortDescription:
+          'Implementación física de la base de datos proyecto_db1 en MySQL 8.0.46, configuración del pool de conexiones JNDI/JDBC en Java y consultas operativas.',
+        context:
+          'A partir del modelo relacional normalizado, se implementó la base de datos física proyecto_db1 sobre MySQL Community Server 8.0.46 administrada desde MySQL Workbench, integrándola con el backend Java mediante el driver MySQL Connector/J 9.5.0, HikariCP 7.1.0 y un DataSource JNDI gestionado en WildFly.',
+        statementIntro:
+          'La implementación articula la estructura física del esquema relacional en MySQL con la capa de persistencia JDBC del backend Java:',
+        statementBlocks: [
+          {
+            title: '1. Entorno del motor relacional y estructura del esquema proyecto_db1',
+            items: [
+              'Motor de base de datos: MySQL Community Server 8.0.46 ejecutándose sobre el servidor Linux del proyecto.',
+              'Herramienta de administración y modelado físico: MySQL Workbench.',
+              'Nombre del esquema físico: proyecto_db1, conformado por las 17 tablas relacionales (BENEFICIO, CATEGORIA, CLIENTE, CLIENTE_FRECUENTE, ELEMENTO_JUEGO, EMPLEADO, EXPANSION, JUEGO_MESA, MEMBRESIA, MESA, PRESTAMO, PRESTAMO_UNIDAD_JUEGO, RESERVA, RESERVA_JUEGO, SOCIO, TELEFONO y UNIDAD_JUEGO).',
+              'Claves primarias y foráneas: Implementación de claves primarias simples (como num_serie en JUEGO_MESA, documento en CLIENTE y EMPLEADO, id_prestamo en PRESTAMO, id_reserva en RESERVA) y claves primarias compuestas para entidades débiles y tablas asociativas ((num_serie, codigo) en UNIDAD_JUEGO, (id_prestamo, num_serie, codigo) en PRESTAMO_UNIDAD_JUEGO, (id_reserva, num_serie) en RESERVA_JUEGO, (documento, telefono) en TELEFONO, (num_serie, num_categoria) en CATEGORIA y (id_membresia, id_beneficio) en BENEFICIO).',
+              'Restricciones de integridad: Uso de restricciones NOT NULL en atributos obligatorios, validación de dominios y tipos de datos (VARCHAR, INT, DATE, TIME, DECIMAL) e integridad referencial mediante cláusulas FOREIGN KEY entre tablas.',
+            ],
+          },
+          {
+            title: '2. Arquitectura de acceso a datos desde Java (JDBC y JNDI)',
+            paragraphs: [
+              'El acceso a la base de datos desde la aplicación backend sigue un flujo desacoplado de cinco niveles: Controlador REST → Servicio → Mapper (DTO ↔ Entidad) → Repositorio JDBC → ConnectionBD (DataSource JNDI / MySQL).',
+            ],
+            items: [
+              'Clase ConnectionBD: Centraliza la obtención de conexiones invocando InitialContext.lookup("java:/jdbc/CafeLudotecaDS") sobre el pool configurado en el servidor de aplicaciones WildFly, encapsulando cualquier NamingException o SQLException en una excepción de dominio PersistenceException.',
+              'Repositorios JDBC (*RepositoryJDBC): Implementan las operaciones CRUD mediante bloques try-with-resources que cierran automáticamente Connection, PreparedStatement y ResultSet, utilizando consultas parametrizadas (?) para garantizar seguridad frente a inyección SQL.',
+              'Mappers y DTOs: Aíslan las entidades de persistencia (co.edu.unbosque.model.entity) de los objetos de transferencia expuestos en la API REST (co.edu.unbosque.model.dto).',
+            ],
+          },
+        ],
+        assumptionsIntro:
+          'En la revisión cruzada entre la documentación técnica entregada y el código fuente final del proyecto se destacan dos precisiones importantes:',
+        assumptions: [
+          {
+            title: 'Evolución del código fuente frente al Documento de implementación RDBMS',
+            paragraphs: [
+              'El archivo Documento de implementación RDBMS – CafeLudoteca.pdf corresponde a un corte intermedio del desarrollo en el que se reportaban 10 repositorios implementados y 5 entidades pendientes de repositorio (Categoria, ElementoJuego, Expansion, Prestamo y UnidadJuego). Sin embargo, la inspección del código fuente final en CafeLudoteca-main/backend confirma que las 15 entidades del modelo de dominio cuentan con su implementación completa en todas las capas: Entidad, DTOs de petición y respuesta, Mapper, interfaz de repositorio, implementación RepositoryJDBC, Servicio y Controlador REST (mientras que las 2 tablas asociativas puras PRESTAMO_UNIDAD_JUEGO y RESERVA_JUEGO operan a nivel relacional en MySQL).',
+            ],
+          },
+          {
+            title: 'Alcance de los scripts SQL incluidos en el paquete documental',
+            paragraphs: [
+              'La carpeta Scripts/ del paquete del proyecto contiene 40 archivos .sql correspondientes a las consultas operativas parametrizadas (INSERT, SELECT, UPDATE y DELETE) diseñadas para los repositorios JDBC de las entidades, sin incluir un archivo DDL único de creación inicial (CREATE TABLE), ya que la creación del esquema físico proyecto_db1 se efectuó directamente en el servidor MySQL a través de MySQL Workbench.',
+            ],
+          },
+        ],
+        codeBlocks: [
+          {
+            title: '1. Obtención de conexiones mediante DataSource JNDI en WildFly',
+            subtitle: 'backend/src/main/java/co/edu/unbosque/config/ConnectionBD.java',
+            badge: '.java',
+            code: `package co.edu.unbosque.config;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
+import co.edu.unbosque.exceptions.PersistenceException;
+
+public final class ConnectionBD {
+
+    private static final String JNDI_NAME = "java:/jdbc/CafeLudotecaDS";
+
+    private ConnectionBD() {
+    }
+
+    public static Connection obtenerConexion() {
+        try {
+            InitialContext context = new InitialContext();
+            DataSource dataSource = (DataSource) context.lookup(JNDI_NAME);
+            context.close();
+            return dataSource.getConnection();
+        } catch (NamingException | SQLException e) {
+            throw new PersistenceException(
+                    "Error al obtener la conexion con MySQL mediante WildFly",
+                    e
+            );
+        }
+    }
+}`,
+            explanation:
+              'La clase utilitaria ConnectionBD recupera conexiones activas del pool administrado por WildFly bajo el nombre JNDI java:/jdbc/CafeLudotecaDS hacia el esquema proyecto_db1 en MySQL 8.0.46.',
+          },
+          {
+            title: '2. Consultas SQL parametrizadas sobre JUEGO_MESA y UNIDAD_JUEGO',
+            subtitle: 'Scripts/CrearJuego.sql · ActualizarJuego.sql · CrearUnidadJuego.sql',
+            badge: '.sql',
+            code: `-- Inserción de un título en el catálogo (JUEGO_MESA)
+INSERT INTO JUEGO_MESA (
+    num_serie, reglamento, cantidad_minima_jugadores,
+    cantidad_maxima_jugadores, edad_minima, nombre, duracion_partida
+) VALUES (?, ?, ?, ?, ?, ?, ?);
+
+-- Búsqueda flexible por nombre (case-insensitive)
+SELECT *
+FROM JUEGO_MESA
+WHERE LOWER(nombre) LIKE LOWER(?);
+
+-- Registro de una unidad física (entidad débil UNIDAD_JUEGO con PK compuesta)
+INSERT INTO UNIDAD_JUEGO (
+    num_serie, codigo, observaciones, estado
+) VALUES (?, ?, ?, ?);
+
+-- Actualización del estado operativo y observaciones de un ejemplar físico
+UPDATE UNIDAD_JUEGO
+SET observaciones = ?,
+    estado = ?
+WHERE num_serie = ? AND codigo = ?;`,
+            explanation:
+              'Consultas representativas del módulo de inventario: combinan el mantenimiento de la entidad fuerte JUEGO_MESA con la gestión de ejemplares físicos en UNIDAD_JUEGO utilizando su clave primaria compuesta (num_serie, codigo).',
+          },
+          {
+            title: '3. Consultas SQL para Préstamos, Reservas, Socios y Membresías',
+            subtitle: 'Scripts/CrearPrestamo.sql · CrearReserva.sql · CrearMembresia.sql',
+            badge: '.sql',
+            code: `-- Registro de un préstamo vinculando cliente solicitante y empleado responsable
+INSERT INTO PRESTAMO (
+    id_prestamo, fecha_salida, fecha_devolucion,
+    tipo_prestamo, estado_componentes, documento, documento_empleado
+) VALUES (?, ?, ?, ?, ?, ?, ?);
+
+-- Consulta de préstamos por tipo (Local / Domicilio) o por cliente
+SELECT *
+FROM PRESTAMO
+WHERE id_prestamo = ?;
+
+-- Creación de una reserva de mesa temática por parte de un cliente
+INSERT INTO RESERVA (
+    id_reserva, fecha, horario, documento, id_mesa
+) VALUES (?, ?, ?, ?, ?);
+
+-- Registro de membresía asociada a un socio afiliado
+INSERT INTO MEMBRESIA (
+    id_membresia, plan, estado, fecha_inicio, documento, tarifa, fecha_fin
+) VALUES (?, ?, ?, ?, ?, ?, ?);`,
+            explanation:
+              'Sentencias SQL empleadas por PrestamoRepositoryJDBC, ReservaRepositoryJDBC y MembresiaRepositoryJDBC, donde se aprecia el uso de las claves foráneas documento, documento_empleado e id_mesa para preservar la integridad referencial.',
+          },
+        ],
+        resources: [
+          {
+            label: 'VER / DESCARGAR IMPLEMENTACIÓN RDBMS (.PDF)',
+            url: '/evidencias/proyecto/implementacion-rdbms-mysql.pdf',
+          },
+        ],
+        status: 'available',
+      },
+      {
+        slug: 'arquitectura-tecnologica',
+        order: 5,
+        type: 'PROYECTO',
+        title: 'Arquitectura tecnológica',
+        subtitle: 'Infraestructura en servidor físico Linux, red privada Tailscale, backend Java/WildFly y frontend Angular',
+        shortDescription:
+          'Despliegue distribuido del motor MySQL en servidor dedicado Dell con Linux Mint 22.3 Xfce, interconexión por VPN Tailscale y arquitectura full-stack Java 21 + Angular 19.',
+        context:
+          'El proyecto Café & Ludoteca se implementó sobre una arquitectura cliente-servidor distribuida que integra un servidor físico dedicado para la base de datos MySQL, una red privada virtual en malla con Tailscale para la conexión remota segura de los tres equipos de desarrollo, un backend empresarial en Java desplegado sobre WildFly y un frontend moderno en Angular.',
+        statementIntro:
+          'A partir de los documentos de infraestructura, selección tecnológica, presupuesto y el código fuente en CafeLudoteca-main, se detallan los componentes reales de hardware y software del proyecto:',
+        statementBlocks: [
+          {
+            title: '1. Servidor físico dedicado de base de datos y red privada Tailscale',
+            paragraphs: [
+              'Por autorización expresa del docente de la asignatura, en lugar de emplear una máquina virtual local se aprovisionó un computador portátil físico marca Dell dedicado exclusivamente a operar como servidor de base de datos para todo el equipo:',
+            ],
+            items: [
+              'Hardware del servidor: Portátil Dell Inspiron 3458 con procesador Intel Core i3, 6 GB de memoria RAM y disco duro de 500.1 GB.',
+              'Sistema operativo instalado: Linux Mint 22.3 con entorno de escritorio ligero Xfce (64 bits), seleccionado por su bajo consumo de memoria en reposo (~450 MB de RAM), estabilidad basada en Ubuntu LTS/Debian y facilidad de administración.',
+              'Motor de base de datos en el servidor: MySQL Server 8.0.46 escuchando peticiones remotas autenticadas de los desarrolladores sobre la base de datos proyecto_db1.',
+              'Conectividad privada mediante VPN Tailscale: El servidor Dell expone la dirección IP privada 100.64.242.64 dentro de la red malla cifrada (WireGuard) de Tailscale, permitiendo que los tres computadores de desarrollo (Michael, Santiago y Alejandra) se conecten de forma segura al puerto 3306 de MySQL desde distintas ubicaciones sin abrir puertos públicos en el router.',
+            ],
+          },
+          {
+            title: '2. Arquitectura del Backend (Java, Maven, Jakarta REST y WildFly)',
+            paragraphs: [
+              'El backend está construido como una aplicación empaquetada en formato WAR (CafeLudoteca.war) bajo el grupo co.edu.unbosque y desplegada localmente en cada estación de desarrollo sobre un servidor de aplicaciones WildFly:',
+            ],
+            items: [
+              'Lenguaje y compilación: Java 21 configurado en maven-compiler-plugin 3.14.1 (ejecutado sobre JDK Eclipse Temurin 25 en entorno de desarrollo) y gestionado con Apache Maven (maven-war-plugin 3.4.0).',
+              'Especificación de servicios web: Jakarta RESTful Web Services (jakarta.ws.rs-api 3.1.0) activado mediante la clase RestApplication anotada con @ApplicationPath("/api").',
+              'Serialización y utilidades: Jackson Databind 2.20.1 para conversión JSON, Lombok 1.18.42 para reducción de código repetitivo y JUnit 4.13.2.',
+              'Persistencia y pool de conexiones: Driver MySQL Connector/J 9.5.0 y HikariCP 7.1.0 integrados con el DataSource JNDI java:/jdbc/CafeLudotecaDS en WildFly 42.0.0.Final.',
+              'Estructura modular completa en código fuente: 15 Entidades (Beneficio, Categoria, Cliente, ClienteFrecuente, ElementoJuego, Empleado, Expansion, JuegoMesa, Membresia, Mesa, Prestamo, Reserva, Socio, Telefono, UnidadJuego), 32 clases DTO (Request y Response), 15 Mappers, 15 interfaces de repositorio + 15 implementaciones RepositoryJDBC, 15 interfaces de servicio + 15 implementaciones de servicio, 15 interfaces de controlador + 15 Controladores REST y manejo centralizado de errores (PersistenceException, BadRequestException, ResourceNotFoundException).',
+            ],
+          },
+          {
+            title: '3. Arquitectura del Frontend (Angular 19 y Node.js) y vistas por rol',
+            paragraphs: [
+              'El cliente web fue desarrollado como una Single Page Application (SPA) en Angular 19.2.x sobre Node.js 24.14.0 y TypeScript 5.7, consumiendo los endpoints REST del backend y organizando la experiencia de usuario en tres layouts independientes según el rol seleccionado en la pantalla inicial (RoleSelectionPageComponent):',
+            ],
+            items: [
+              '1. Vista Cliente (ClientLayoutComponent): Incluye las rutas /inicio (HomePageComponent), /catalogo (CatalogPageComponent con filtros de juegos), /reservas (ReservationsPageComponent para reservar mesas temáticas), /negociaciones, /contacto y /carta.',
+              '2. Vista Empleado (EmployeeLayoutComponent, prefijo /empleado): Incluye /empleado/catalogo, /empleado/reservas, /empleado/prestamos (LoansPageComponent para registro y control de préstamos) y /empleado/auditoria (verificación de estado de componentes y devoluciones).',
+              '3. Vista Administrador (AdminLayoutComponent, prefijo /admin): Agrupa la gestión integral en módulos de Usuarios (/admin/clientes, /admin/empleados, /admin/socios, /admin/membresias), Relaciones (/admin/relaciones/beneficios, /admin/relaciones/clientes-frecuentes, /admin/relaciones/telefonos), Inventario (/admin/inventario/juegos, /admin/inventario/categorias, /admin/inventario/expansiones, /admin/inventario/elementos, /admin/inventario/unidades) y Operación (/admin/operacion/mesas).',
+              'Control de versiones colaborativo: Repositorio compartido en GitHub con flujo de ramas para integrar el trabajo de los tres integrantes del equipo.',
+            ],
+          },
+          {
+            title: '4. Análisis comparativo de tecnologías y presupuesto del proyecto',
+            items: [
+              'Selección del RDBMS (analisis_seleccion_rdbms.pdf): Se evaluaron MySQL, PostgreSQL, Oracle Database y Microsoft SQL Server bajo criterios de consumo de recursos en el servidor Dell de 6 GB RAM, licenciamiento libre, soporte JDBC y facilidad de administración, seleccionando MySQL Community Server 8.0.46.',
+              'Selección del Sistema Operativo (Análisis de selección de Sistema Operativo.pdf): Se compararon distribuciones Linux frente a Windows Server para el portátil Dell Inspiron 3458, optando por Linux Mint 22.3 Xfce para maximizar la memoria disponible para MySQL.',
+              'Presupuesto académico (presupuesto.pdf): Estimación financiera detallada del proyecto (4 meses, 3 desarrolladores) estructurada en costos de personal técnico, amortización de equipos y servidor físico, servicios de conectividad/energía, licencias de software Open Source (costo $0) e imprevistos.',
+            ],
+          },
+        ],
+        assumptionsIntro:
+          'Nota de precisión documental sobre el sistema operativo del servidor físico:',
+        assumptions: [
+          {
+            title: 'Edición Xfce confirmada frente a mención preliminar en documentos PDF',
+            paragraphs: [
+              'En los documentos preliminares de selección de sistema operativo e implementación del servidor se menciona textualmente "Linux Mint 22.3 Cinnamon Edition"; no obstante, durante la instalación real en el portátil Dell Inspiron 3458 se desplegó y verificó la edición Linux Mint 22.3 Xfce (como consta en las capturas de consola y especificaciones técnicas del servidor), por ser más ligera y adecuada para un equipo dedicado de 6 GB de RAM.',
+            ],
+          },
+        ],
+        resources: [
+          {
+            label: 'IMPLEMENTACIÓN DEL SERVIDOR FÍSICO DELL / VM (.PDF)',
+            url: '/evidencias/proyecto/implementacion-servidor-dell.pdf',
+          },
+          {
+            label: 'ANÁLISIS DE SELECCIÓN DEL RDBMS (.PDF)',
+            url: '/evidencias/proyecto/analisis-seleccion-rdbms.pdf',
+          },
+          {
+            label: 'ANÁLISIS DE SELECCIÓN DE SISTEMA OPERATIVO (.PDF)',
+            url: '/evidencias/proyecto/analisis-seleccion-so.pdf',
+          },
+          {
+            label: 'PRESUPUESTO DEL PROYECTO (.PDF)',
+            url: '/evidencias/proyecto/presupuesto-proyecto.pdf',
+          },
+        ],
+        status: 'available',
+      },
+      {
+        slug: 'pruebas-funcionales',
+        order: 6,
+        type: 'PROYECTO',
+        title: 'Pruebas funcionales',
+        subtitle: 'Verificación de endpoints REST, operaciones CRUD con Thunder Client y registro de defectos corregidos',
+        shortDescription:
+          'Ejecución de pruebas de integración sobre la API REST y la base de datos MySQL utilizando Thunder Client en VS Code, validando operaciones CRUD y corrección de defectos.',
+        context:
+          'Para validar la correcta integración entre los Controladores REST desplegados en WildFly, la capa de Servicios y Mappers, los Repositorios JDBC y las tablas físicas de la base de datos proyecto_db1 en MySQL, se diseñó y ejecutó un plan de pruebas funcionales utilizando la extensión Thunder Client en Visual Studio Code.',
+        statementIntro:
+          'A partir del informe técnico de pruebas del proyecto, se documentan el propósito de la validación, los módulos y endpoints evaluados, los defectos detectados durante las pruebas iniciales y las correcciones aplicadas en el código:',
+        statementBlocks: [
+          {
+            title: '1. Propósito, alcance y entorno de las pruebas funcionales',
+            items: [
+              'Propósito: Comprobar que cada endpoint expuesto bajo el prefijo /CafeLudoteca/api/* procese adecuadamente las peticiones HTTP (POST, GET, PUT y DELETE), aplique las validaciones de negocio, ejecute las sentencias PreparedStatement sobre MySQL y retorne los códigos de estado HTTP (200 OK, 201 Created, 400 Bad Request, 404 Not Found) y estructuras JSON esperadas.',
+              'Herramienta de pruebas: Thunder Client (cliente REST integrado en Visual Studio Code) enviando peticiones hacia el servidor local WildFly conectado a la base de datos remota MySQL 8.0.46 vía Tailscale (100.64.242.64:3306).',
+              'Criterio de verificación dual: Cada caso de prueba validó tanto la respuesta JSON del servicio REST como la persistencia real del registro en las tablas de MySQL.',
+            ],
+          },
+          {
+            title: '2. Módulos y endpoints REST evaluados en operaciones CRUD',
+            paragraphs: [
+              'El plan de pruebas cubrió los controladores principales del inventario de ludoteca y de la operación de clientes, préstamos y mesas:',
+            ],
+            items: [
+              'Módulo JuegoMesa (/api/juegos): Creación de títulos en el catálogo (POST), consulta general y filtro por nombre o número de serie (GET), actualización de atributos como reglamento, rango de jugadores y duración (PUT) y eliminación por num_serie (DELETE).',
+              'Módulo UnidadJuego (/api/unidades): Registro de ejemplares físicos asociados a un num_serie existente (POST), consulta por clave compuesta (num_serie, codigo) (GET), actualización de estado operativo (Disponible, Prestado, En reparación) y observaciones (PUT), y baja de unidades (DELETE).',
+              'Módulo Expansion (/api/expansiones): Creación de expansiones vinculadas por clave foránea a JUEGO_MESA (POST), listado y búsqueda por id_expansion (GET), modificación de descripción y contenido adicional (PUT) y eliminación (DELETE).',
+              'Módulo Categoria (/api/categorias): Asociación de categorías temáticas mediante clave compuesta (num_serie, num_categoria) (POST), consulta de categorías por juego (GET), actualización (PUT) y eliminación (DELETE).',
+              'Módulo ElementoJuego (/api/elementos): Registro de piezas y componentes internos de cada juego (POST), consulta por id_elemento_juego (GET), actualización (PUT) y eliminación (DELETE).',
+              'Módulos Operativos de Clientes, Empleados, Mesas y Préstamos (/api/clientes, /api/empleados, /api/mesas, /api/prestamos): Verificación del flujo de registro de actores, creación de mesas temáticas y apertura/actualización de préstamos validando la integridad referencial de documento y documento_empleado.',
+            ],
+          },
+          {
+            title: '3. Defectos encontrados durante las pruebas y correcciones realizadas',
+            paragraphs: [
+              'Durante la ejecución inicial de las pruebas con Thunder Client se identificaron tres defectos principales en la integración Backend–MySQL, los cuales fueron diagnosticados mediante las trazas del servidor WildFly y corregidos antes de la validación final:',
+            ],
+            items: [
+              'DEF-01 — Error HTTP 405 Method Not Allowed al invocar endpoints REST: Al enviar peticiones POST y GET hacia las rutas del proyecto, el contenedor respondía con estado 405 porque Jakarta REST no contaba con una clase de configuración que registrara la raíz de los recursos. Corrección: Se implementó la clase RestApplication extends Application en el paquete co.edu.unbosque.config anotada con @ApplicationPath("/api"), habilitando el enrutamiento correcto de los 15 controladores.',
+              'DEF-02 — Error SQL Unknown column "cantidad_minima_jugador" in field list en JuegoMesaRepositoryJDBC: Al ejecutar el método saveJuegoMesa, MySQL rechazaba el INSERT debido a una discrepancia entre el nombre de la columna escrito en la sentencia SQL (cantidad_minima_jugador en singular) y el nombre real definido en la tabla física JUEGO_MESA (cantidad_minima_jugadores en plural). Corrección: Se estandarizó el nombre de la columna a cantidad_minima_jugadores en las consultas INSERT, SELECT y UPDATE de JuegoMesaRepositoryJDBC.',
+              'DEF-03 — Error SQL Column "nombre" cannot be null al insertar en JUEGO_MESA: A pesar de enviar el atributo nombre en el cuerpo JSON de la petición POST, el registro llegaba con valor nulo al PreparedStatement porque en JuegoMesaMapper.toEntity() se había omitido la asignación entidad.setNombre(dto.getNombre()). Corrección: Se completó el mapeo bidireccional del atributo nombre en JuegoMesaMapper, logrando inserciones y actualizaciones exitosas con respuesta HTTP 201/200.',
+            ],
+          },
+          {
+            title: '4. Resultados documentados tras las correcciones',
+            paragraphs: [
+              'Una vez aplicadas las correcciones de los defectos DEF-01, DEF-02 y DEF-03 y redesplegado el archivo CafeLudoteca.war en WildFly, la reejecución de los casos de prueba CRUD sobre los endpoints de JuegoMesa, UnidadJuego, Expansion, Categoria, ElementoJuego, Cliente, Empleado, Prestamo y Mesa arrojó resultados satisfactorios (100 % de los casos ejecutados aprobados en la iteración de cierre), confirmando el cumplimiento de las restricciones de clave primaria, clave foránea y validación de datos.',
+            ],
+          },
+        ],
+        assumptionsIntro:
+          'Nota de revisión editorial sobre el documento fuente de pruebas:',
+        assumptions: [
+          {
+            title: 'Observación sobre metadatos preliminares en Pruebas.pdf',
+            paragraphs: [
+              'El informe original Pruebas.pdf incluido en la carpeta Documentacion/ conserva en su portada un marcador de plantilla sin diligenciar ("Autor: [Tu nombre]") y menciona en su introducción una versión preliminar del servidor de aplicaciones (WildFly 38.0.1 frente a WildFly 42.0.0.Final documentado en la configuración final del entorno). Por rigor académico y siguiendo los criterios de curaduría del portafolio, toda la información técnica de los casos de prueba, endpoints, códigos de respuesta y defectos corregidos (DEF-01, DEF-02 y DEF-03) se ha integrado de forma completa en esta página sin modificar el archivo original ni publicar como descargable definitivo un documento con metadatos de autoría en borrador.',
+            ],
+          },
+        ],
+        status: 'available',
+      },
+    ],
   },
 };
 
