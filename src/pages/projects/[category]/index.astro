@@ -4,7 +4,7 @@ import Navbar from '../../../components/home/Navbar.astro';
 import Footer from '../../../components/shared/Footer.astro';
 import EvidenceCategoryHeader from '../../../components/evidencias/EvidenceCategoryHeader.astro';
 import EvidenceCard from '../../../components/evidencias/EvidenceCard.astro';
-import { CATEGORIES_LIST, type CategoryData } from '../../../data/evidencias';
+import { CATEGORIES_DATA, CATEGORIES_LIST, type CategoryData } from '../../../data/evidencias';
 
 export function getStaticPaths() {
   return CATEGORIES_LIST.map((category) => ({
@@ -17,7 +17,8 @@ export interface Props {
   category: CategoryData;
 }
 
-const { category } = Astro.props;
+const categoryParam = Astro.params.category as string;
+const category = CATEGORIES_DATA[categoryParam] ?? Astro.props.category;
 ---
 
 <Layout

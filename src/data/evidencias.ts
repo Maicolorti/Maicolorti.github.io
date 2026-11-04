@@ -12,6 +12,12 @@ export interface EvidenceSection {
 
 export interface EvidenceDetailBlock {
   title: string;
+  question?: string;
+  questionItems?: string[];
+  questionClosing?: string;
+  answer?: string[];
+  answerItems?: string[];
+  conclusion?: string;
   paragraphs?: string[];
   items?: string[];
 }
@@ -529,19 +535,84 @@ export const CATEGORIES_DATA: Record<string, CategoryData> = {
         slug: 'quiz',
         order: 3,
         type: 'EJERCICIO CALIFICABLE',
-        title: 'Quiz',
+        title: 'Quiz de Normalización',
+        subtitle:
+          'Evaluación conceptual sobre Tercera Forma Normal y Forma Normal de Boyce-Codd',
         shortDescription:
-          'Evaluación conceptual y práctica sobre técnicas y reglas de normalización.',
-        status: 'upcoming',
+          'Evaluación conceptual sobre claves candidatas, atributos primos, Tercera Forma Normal (3FN) y Forma Normal de Boyce-Codd (BCNF).',
+        context:
+          'Evaluación calificable enfocada en el análisis de dependencias funcionales, determinación de claves candidatas e identificación de atributos primos y no primos para verificar el cumplimiento de 1FN, 2FN, 3FN y BCNF.',
+        statementIntro:
+          'A continuación se presentan los dos puntos evaluados junto con su respectivo análisis y justificación formal:',
+        statementBlocks: [
+          {
+            title: 'Punto 1 — Evaluación de 3FN y BCNF',
+            question:
+              'Dada la relación R(A,B,C), con las siguientes dependencias funcionales:',
+            questionItems: ['AB → C', 'C → B'],
+            questionClosing:
+              '¿La relación cumple la Tercera Forma Normal (3FN) o la Forma Normal de Boyce-Codd (BCNF)? Justifique su respuesta.',
+            answerItems: [
+              'AB es clave candidata porque determina C.',
+              'AC también es clave candidata porque C determina B.',
+            ],
+            answer: [
+              'Primero identificamos las claves candidatas:',
+              'Por tanto, los tres atributos A, B y C son atributos primos, porque pertenecen al menos a una clave candidata.',
+              'Cumple 3FN: sí. La dependencia AB → C tiene como determinante una superclave. En C → B, aunque C no es superclave, B es un atributo primo.',
+              'Cumple BCNF: no. La dependencia C → B incumple esta forma normal porque C no es superclave.',
+            ],
+            conclusion: 'Cumple 3FN, pero no BCNF.',
+          },
+          {
+            title: 'Punto 2 — Clave primaria compuesta y formas normales',
+            question: 'Se tiene una relación con los atributos:',
+            questionItems: ['ID_PROFESOR', 'IDIOMA', 'COMPETENCIA'],
+            questionClosing:
+              'Los tres atributos conforman una clave primaria compuesta. ¿Qué formas normales cumple la relación y hasta cuál se puede garantizar su cumplimiento? Justifique.',
+            answer: [
+              'Si los valores de los atributos son atómicos, la relación cumple 1FN.',
+              'Cumple 2FN: sí. Los tres atributos son primos porque forman parte de la clave primaria compuesta. Por lo tanto, no existen atributos no primos que puedan depender parcialmente de una parte de dicha clave.',
+              'Cumple 3FN: sí, con la información proporcionada. Al ser todos los atributos primos, se satisface el criterio de 3FN.',
+              'BCNF: no se puede determinar únicamente con la información del enunciado. Es necesario conocer las dependencias funcionales para comprobar si todos los determinantes son superclaves.',
+            ],
+            conclusion: 'Cumple hasta 3FN; BCNF queda pendiente de verificar.',
+          },
+        ],
+        status: 'available',
       },
       {
         slug: 'parcial',
         order: 4,
         type: 'EJERCICIO CALIFICABLE',
-        title: 'Parcial',
+        title: 'Parcial oral de Normalización',
+        subtitle: 'Evaluación conceptual sobre Segunda y Tercera Forma Normal',
         shortDescription:
-          'Evaluación parcial sobre formas normales (1FN, 2FN, 3FN y BCNF) y descomposición sin pérdida.',
-        status: 'upcoming',
+          'Sustentación oral sobre dependencias funcionales, atributos primos y no primos, y evaluación de Segunda y Tercera Forma Normal (2FN y 3FN).',
+        context:
+          'Evaluación calificable en modalidad oral orientada a sustentar conceptualmente los criterios de verificación de la Segunda Forma Normal (2FN) y la Tercera Forma Normal (3FN) a partir del análisis de claves candidatas, atributos primos y atributos no primos.',
+        statementIntro:
+          'Durante la sustentación oral se plantearon y respondieron los siguientes dos puntos conceptuales:',
+        statementBlocks: [
+          {
+            title: 'Punto 1',
+            question:
+              'Si todos los atributos de una relación son atributos clave, ¿se cumple la Segunda Forma Normal (2FN)?',
+            answer: [
+              'Sí, siempre que la relación cumpla previamente con la Primera Forma Normal (1FN). La Segunda Forma Normal exige que todos los atributos no primos dependan completamente de cada clave candidata, evitando dependencias parciales. Si todos los atributos son primos, no existen atributos no primos que puedan presentar la dependencia parcial prohibida por la 2FN.',
+            ],
+          },
+          {
+            title: 'Punto 2',
+            question:
+              '¿Por qué es importante distinguir los atributos primos y no primos al evaluar la Tercera Forma Normal (3FN)?',
+            answer: [
+              'Es importante porque permite analizar las dependencias funcionales y determinar si existen dependencias transitivas que afectan la normalización. Los atributos primos pertenecen a alguna clave candidata, mientras que los no primos no forman parte de ninguna clave candidata.',
+              'Para cumplir la 3FN, en toda dependencia funcional no trivial X → A, debe cumplirse que X sea una superclave o que A sea un atributo primo. Esta distinción ayuda a identificar dependencias transitivas problemáticas y evitar redundancias y anomalías.',
+            ],
+          },
+        ],
+        status: 'available',
       },
     ],
   },

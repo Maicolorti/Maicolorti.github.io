@@ -134,6 +134,82 @@ const { category, evidence } = Astro.props;
                       </h3>
 
                       {
+                        block.question && (
+                          <div class="mb-5 space-y-3">
+                            <span class="text-xs font-bold uppercase tracking-[0.2em] text-primary block">
+                              Pregunta
+                            </span>
+                            <p class="text-lg md:text-xl font-semibold text-slate-900 dark:text-white leading-relaxed">
+                              {block.question}
+                            </p>
+                            {
+                              block.questionItems && block.questionItems.length > 0 && (
+                                <ul class="space-y-1.5 rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950/70 px-5 py-3.5 font-mono text-sm md:text-base font-semibold text-slate-800 dark:text-slate-200">
+                                  {
+                                    block.questionItems.map((qItem) => (
+                                      <li>{qItem}</li>
+                                    ))
+                                  }
+                                </ul>
+                              )
+                            }
+                            {
+                              block.questionClosing && (
+                                <p class="text-lg md:text-xl font-semibold text-slate-900 dark:text-white leading-relaxed">
+                                  {block.questionClosing}
+                                </p>
+                              )
+                            }
+                          </div>
+                        )
+                      }
+
+                      {
+                        block.answer && block.answer.length > 0 && (
+                          <div class="pt-5 border-t border-slate-200 dark:border-slate-800">
+                            <span class="text-xs font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400 block mb-2.5">
+                              Respuesta
+                            </span>
+                            <div class="space-y-3">
+                              {
+                                block.answer.map((paragraph, index) => (
+                                  <>
+                                    <p class="text-base md:text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
+                                      {paragraph}
+                                    </p>
+                                    {
+                                      index === 0 && block.answerItems && block.answerItems.length > 0 && (
+                                        <ul class="space-y-2 list-disc list-inside pl-2 text-base md:text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
+                                          {
+                                            block.answerItems.map((aItem) => (
+                                              <li>{aItem}</li>
+                                            ))
+                                          }
+                                        </ul>
+                                      )
+                                    }
+                                  </>
+                                ))
+                              }
+                            </div>
+
+                            {
+                              block.conclusion && (
+                                <div class="mt-5 rounded-md border-l-4 border-primary bg-primary/5 dark:bg-primary/10 px-5 py-4">
+                                  <span class="text-[11px] font-bold uppercase tracking-[0.2em] text-primary block mb-1">
+                                    Conclusión destacada
+                                  </span>
+                                  <p class="text-base md:text-lg font-bold text-slate-900 dark:text-white">
+                                    {block.conclusion}
+                                  </p>
+                                </div>
+                              )
+                            }
+                          </div>
+                        )
+                      }
+
+                      {
                         block.paragraphs && block.paragraphs.length > 0 && (
                           <div class="space-y-3 mb-4 last:mb-0">
                             {

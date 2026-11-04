@@ -3,7 +3,7 @@ import Layout from '../../../layouts/Layout.astro';
 import Navbar from '../../../components/home/Navbar.astro';
 import Footer from '../../../components/shared/Footer.astro';
 import EvidenceDetail from '../../../components/evidencias/EvidenceDetail.astro';
-import { CATEGORIES_LIST, type CategoryData, type EvidenceItem } from '../../../data/evidencias';
+import { CATEGORIES_DATA, CATEGORIES_LIST, type CategoryData, type EvidenceItem } from '../../../data/evidencias';
 
 export function getStaticPaths() {
   return CATEGORIES_LIST.flatMap((category) =>
@@ -21,7 +21,12 @@ export interface Props {
   evidence: EvidenceItem;
 }
 
-const { category, evidence } = Astro.props;
+const categoryParam = Astro.params.category as string;
+const slugParam = Astro.params.slug as string;
+const category = CATEGORIES_DATA[categoryParam] ?? Astro.props.category;
+const evidence =
+  category.evidences.find((item) => item.slug === slugParam) ??
+  Astro.props.evidence;
 ---
 
 <Layout
